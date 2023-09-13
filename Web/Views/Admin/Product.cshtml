@@ -1,0 +1,359 @@
+﻿@model List<Entities.Product>
+@{
+    ViewBag.Title = "WebsiteInformation";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int Count = 0;
+}
+
+<style>
+    select {
+        -webkit-appearance: listbox !important
+    }
+
+    /*------------slider-css------------------*/
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 53px;
+        height: 26px;
+    }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+    .filter-label label {
+        font-size: 15px;
+    }
+
+    /*------------slider-css-ends------------------*/
+</style>
+
+
+<div id="product-add-container">
+
+</div>
+
+<div class="product-table">
+    <div class="adminpage-head">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div>
+                    <h6 class="m-0 font-weight-bold text-primary text-uppercase">Products - <span style="color: var(--success);"></span></h6>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" id="add-product" data-toggle="collapse" data-target="#filter-panel">
+                        <span class="glyphicon glyphicon-cog"></span> Add Product
+                    </button>
+                </div>
+
+            </div>
+            <div class="card-body table-responsive">
+                <table class="product-table table table-bordered" id="ProductTable" cellspacing="0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Product Name</th>
+                            <th>Image</th>
+                            <th>Sub Category</th>
+                            <th>Date</th>
+                            <th>Featured?</th>
+                            <th>Button?</th>
+                            <th>Seo Tags</th>
+                            <th>Status</th>
+                            <th>Rating</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            Count = Count + 1;
+                            <tr>
+                                <td>@Count</td>
+                                <td>@item.Name</td>
+                                <td>@item.imgdefault</td>
+                                <td>@item.SubCategory.Name</td>
+                                <td>@item.CreatedOn</td>
+                                <td>
+                                    @if (item.Isfeatured == true)
+                                    {
+                                        <i style="font-size:1rem" class="bi bi-hand-thumbs-up"></i>
+                                    }
+                                    else
+                                    {
+                                        <i style="font-size:1rem" class="bi bi-hand-thumbs-down"></i>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.isWhatsapp == true)
+                                    {
+                                        <i style="font-size:1rem" class="bi bi-whatsapp"></i>
+                                    }
+                                    else
+                                    {
+                                        <i style="font-size:1rem" class="bi bi-bag"></i>
+                                    }
+                                </td>
+                                <td>@item.SeoTags</td>
+                                <td>
+                                    <div class="form-check form-check-inline">
+                                        @{
+                                            var trueCheckedStatus = item.Status == true ? "Checked" : string.Empty;
+                                        }
+                                        <input type="hidden" name="Status" value='@item.Status' id="chkstatus" title="Status" />
+                                        <input class="form-check-input status-cb" data-id="@item.Id" id="chkstatus" type="checkbox" @trueCheckedStatus>
+                                    </div>
+                                </td>
+                                <td>@item.Rating</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="button-act"><button class="editbtn btn btn-default btn-outline-dark" type="button" data-id="@item.Id" title="Edit"><i class="bi bi-pencil-square"></i></button></div>
+                                        <div style="display:none" class="button-act"><button class="deletebtn btn btn-default btn-outline-danger" type="button" data-id="@item.Id" title="Delete"><i class="bi bi-trash"></i></button></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#ProductTable").DataTable();
+        $("#product-add-container").hide();
+    });
+
+    function focusAction() {
+        $('html, body').animate({
+            scrollTop: $("#product-add-container").offset().top - 100
+        }, 1000);
+    }
+
+
+    $("#add-product").click(function () {
+        focusAction();
+        $("#product-add-container").show();
+        $.ajax({
+            url: '@Url.Action("ProductAdd", "Admin")',
+        })
+            .done(function (response) {
+                $("#product-add-container").html(response);
+                $("html,#messages").animate({ scrollTop: $('#product-add-container').prop("scrollHeight")}, "slow");
+        })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+        });
+    });
+
+    //--------------Edit-btn--------------------//
+
+    $(".editbtn").click(function() {
+        $("#product-add-container").show();
+        $.ajax({
+            url: '@Url.Action("ProductEdit", "Admin")',
+            data: {
+                id: $(this).attr('data-id')
+            }
+        })
+        .done(function (response) {
+            $("#product-add-container").html(response);
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            $('.loadermodel').hide();
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            })
+        });
+    });
+
+    //------------//--Edit-btn--//------------------//
+
+    //--------------Delete-btn--------------------//
+
+    
+
+    //------------//--Delete-btn--//------------------//
+
+    //--------------Status-chechbox--------------------//
+
+    $('.status-cb').change(function () {
+        if ($(this).prop("checked") == true) {
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to change the status!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Change it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title:'Status',
+                    text:'Changed',
+                    icon:'success',
+                    showConfirmButton: false,
+                })
+            var ProId = $(this).attr("data-id");
+            var Status = true;
+            $.ajax({
+                type:'POST',
+            url: '@Url.Action("ProductStatus", "Admin")',
+            data: {
+                status: Status,
+                proId: ProId
+            }
+        })
+        .done(function (response) {
+            if (response == true) {
+                Swal.fire({
+                    title: 'Done',
+                    text: 'Successfully Change the status!',
+                })
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+            }
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            })
+        });
+            }
+            else {
+                window.location.reload();
+            }
+        })
+        }
+        else if ($(this).prop("checked") == false) {
+         Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to change the status",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Change it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Status',
+                    text: 'Changed',
+                    icon: 'success',
+                    showConfirmButton: false,
+                })
+                var ProId = $(this).attr("data-id");
+                var Status = false;
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ProductStatus", "Admin")',
+                    data: {
+                        status: Status,
+                        proId: ProId
+                    }
+                })
+                    .done(function (response) {
+                        if (response == true) {
+                            Swal.fire({
+                                title: 'Done',
+                                text: 'Successfully Change the status!',
+                            })
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            })
+                        }
+                    })
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        })
+                    });
+            }
+            else {
+                window.location.reload();
+            }
+        })
+        }
+
+    });
+
+    //------------//--Status-chechbox--//------------------//
+
+
+
+
+</script>

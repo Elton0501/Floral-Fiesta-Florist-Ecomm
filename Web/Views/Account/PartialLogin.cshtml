@@ -1,0 +1,108 @@
+﻿@{ 
+    var Pageurl = Convert.ToString(ViewBag.Url);
+    var message = Convert.ToString(TempData["ConfirmEmail"]);
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<div class="container login-box">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4 login-fullscreen">
+            <div class="logon-wrap">
+                <div class="login-wrap p-0">
+                    <h3 class="mb-4 text-center">Login</h3>
+                    <span class="font-italic" id="regMsg" style="color:var(--primary);">@message</span>
+                    <form class="signin-form" id="LoginForm">
+                        <div class="form-group">
+                            <input type="text" name="Email" id="Email" class="form-control inbor" placeholder="Email" required>
+                        </div>
+                        <div class="form-group mb-0">
+                            <input id="password-field" name="Password" type="password" class="form-control inbor" placeholder="Password" required>
+                            <span toggle="#password-field" class="bi bi-eye-slash- field-icon toggle-password"></span>
+                        </div>
+                        <div class="text-right mb-2 mr-1">
+                            <a href="/forgotpassword" style="color: var(--primary)">Forgot Password</a>
+                        </div>
+                        <div class="form-group d-flex justify-content-center">
+                            <button style="border-radius:0;" type="button" id="UserLogin" class="form-control btn btn-primary submit px-3 w-50 log-btn">Sign In</button>
+                        </div>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <a class="font-italic" href="@Url.Action("Register","Account",new {url=Pageurl })" style="color: var(--primary)">Don't have an account yet? <span class="font-weight-bolder" style="font-size: 1.3rem; color: var(--dark); font-style: normal;">REGISTER</span></a>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".toggle-password").click(function () {
+        $(this).toggleClass("bi-eye bi-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+        $("#LoginForm").validate({
+        rules: {
+            Email: {
+                required: true,
+                email: true,
+            },
+            Password: {
+                required: true,
+            },
+        },
+        messages: {
+            Email: {
+                required: '* Email required',
+                email: '* Enter your valid email'
+            },
+            Password: {
+                required: '* Password is required',
+            },
+        }
+    });
+    $("#UserLogin").click(function () {
+        $("#UserLogin").prop('disabled', true);
+        if ($("#LoginForm").valid()) {
+            var Password = $("#password-field").val();
+            var EmailId = $("#Email").val();
+            $.ajax({
+                type: 'POST',
+                url: '/Account/Login',
+                data: {
+                    Password: Password,
+                    Email: EmailId,
+                    Url: '@Pageurl'
+                },
+                success: function (response) {
+                    if (response.result == true) {
+                        if (response.url != null && response.url != "") {
+                            window.location.href = response.url;
+                            $("#UserLogin").prop('disabled', false);
+                        }
+                        else {
+                            var url = "/";
+                            window.location.href = url;
+                            $("#UserLogin").prop('disabled', false);
+                        }
+                    }
+                    else {
+                        $("#regMsg").html(response.msg);
+                        $("#UserLogin").prop('disabled', false);
+                    }
+                },
+                error: function (response) {
+                    alert("Something went wrong");
+                    $("#UserLogin").prop('disabled', false);
+                }
+            });
+        }
+        $("#UserLogin").prop('disabled', false);
+    });
+</script>

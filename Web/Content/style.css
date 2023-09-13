@@ -1,0 +1,234 @@
+﻿@import url("/Content/fonts.css");
+
+:root {
+    /*theme color*/
+    --head: #ffffff !important;
+    --primary: #417F34 !important;
+    --text: white !important;
+    --secondary: #1d1d1d !important;
+    --dark: #1E5631 !important;
+    --sky: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.primary-btn {
+    color: var(--text) !important;
+    border-color: var(--text) !important;
+    background-color: var(--primary) !important;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    background-color: var(--text) !important;
+}
+
+.dark-btn {
+    color: var(--text) !important;
+    border-color: var(--text) !important;
+    background-color: var(--dark) !important;
+    cursor: pointer;
+}
+
+.dark-btn:hover {
+    color: var(--dark) !important;
+    border-color: var(--dark) !important;
+    background-color: var(--text) !important;
+}
+
+.owl-arrow-btn {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    background-color: var(--text) !important;
+}
+
+.owl-arrow-btn:before {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    background-color: transparent !important;
+}
+
+.owl-arrow-btn:hover {
+    opacity:1;
+}
+
+.light-btn {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    background-color: var(--text) !important;
+    cursor:pointer;
+}
+
+.light-btn:hover {
+    color: var(--text) !important;
+    border-color: var(--text) !important;
+    background-color: var(--primary) !important;
+}
+
+.downcontent-h4{
+    color:var(--primary) !important;
+}
+
+.cart-login {
+    color: var(--text);
+}
+
+.login-cart-icon{
+    color:var(--text) !important;
+}
+
+.modal-content {
+    background-color: #ffffffc7 !important;
+}
+
+.modal-content input {
+    background-color: transparent;
+    border-color: var(--dark);
+    color: var(--dark);
+}
+
+.log-btn {
+    background-color: var(--dark);
+    color: var(--text);
+    border-color: var(--dark);
+}
+
+.log-btn:hover{
+    background-color: var(--dark);
+    color: var(--text);
+    border-color: var(--dark);
+}
+
+.modal-content button:focus {
+    outline: none !important;
+}
+.down-content span{
+    color: var(--primary) !important;
+    opacity:0.7;
+}
+
+.prod-head{
+    color:var(--primary) !important;
+}
+
+.stars {
+    color: var(--primary);
+}
+
+.testimonials-item {
+    border: 2px solid var(--primary);
+    border-top-width: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--primary);
+}
+
+.t-quote {
+    font-size: 4rem;
+    text-align: center;
+}
+
+.t-comment {
+    height: 15rem;
+    overflow-y: scroll;
+    padding: 0 25px;
+    text-align: justify;
+    color: var(--primary);
+}
+
+.t-name {
+    padding: 11px 0;
+    text-align: center;
+    background-color: var(--primary);
+    color: var(--text);
+}
+
+.t-name h3{
+    font-weight: 200;
+}
+
+.t-comment::-webkit-scrollbar {
+    width: 7px;
+}
+
+.t-comment::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.t-comment::-webkit-scrollbar-thumb {
+    background: #898989;
+    border-radius: 10px;
+}
+
+.t-comment::-webkit-scrollbar-thumb:hover {
+    background: rgb(54, 56, 58);
+}
+
+.custon-img img {
+    width: 100%
+}
+
+.custom-box {
+    background-color: var(--primary);
+    background-image: url('images/image 12.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-blend-mode: lighten;
+}
+
+.custom-img {
+    position: absolute;
+}
+
+.custom-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 50vh;
+    justify-content:center;
+    color: var(--text);
+}
+
+.custom-content a {
+    padding: 1rem 2rem;
+    background-color:white;
+    color:var(--primary) !important;
+    margin-top: 2rem;
+    cursor:pointer;
+}
+
+.custom-content a:hover {
+    color:var(--dark) !important;
+}
+
+.custom-content p {
+    color: var(--text);
+}
+
+.main-banner .left-content {
+    height: 100% !important;
+    padding-bottom: 28.5px !important;
+}
+
+.main-banner .left-content .carousel {
+    height: 100% !important;
+}
+
+.main-banner .left-content .carousel .carousel-inner {
+    height: 100% !important;
+}
+
+.main-banner .left-content .carousel .carousel-inner .carousel-item {
+    height: 100% !important;
+}
+
+.main-banner .left-content .carousel .carousel-inner .carousel-item img {
+    height: 100% !important;
+}
+
+.our-services {
+    border: none !important;
+}

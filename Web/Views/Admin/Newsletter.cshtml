@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewBag.Title = "Newsletter";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .error {
+        font-size: 1rem;
+        width: 100%;
+    }
+</style>
+
+
+<div class="adminpage-head">
+    <div class="card shadow mb-4">
+        <div class="form-horizontal">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4>Edit Website Information</h4>
+            </div>
+            <hr />
+            <div class="card-body">
+                <form id="newsletter-publish">
+                    <div class="form-group">
+                        <label class="control-label">Email Subject</label><br />
+                        <input class="form-control" id="subject" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email Heading</label><br />
+                        <input class="form-control" id="head" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email Content</label><br />
+                        <textarea id="maildesc" class="form-control" name="news-content"></textarea>
+                        <input type="text" name="hiddesc" id="hid-des" hidden />
+                    </div>
+
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <div class="">
+                                <button type="button" id="publish" class="btn btn-default btn-outline-primary">Publish</button>
+                            </div>
+                        </div>
+                        <div class="form-group ml-3">
+                            <div class="">
+                                <button type="button" id="test" class="btn btn-default btn-outline-info">Test</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace('news-content');
+    });
+
+    $('#newsletter-publish').validate({
+        rules: {
+            Subject: {
+                required: true,
+            },
+            Head: {
+                required: true,
+            },
+            hiddesc : {
+                required: true,
+            },
+        },
+        messages: {
+            Subject: {
+                required: 'Newsletter Subject is required',
+            },
+            Head: {
+                required: 'Newsletter Heading is required',
+            },
+            hiddesc: {
+                required: 'Newsletter Description is required',
+            },
+        }
+    });
+
+    $("#test").click(function () {
+        var sub = $("#subject").val();
+        var head = $("#head").val();
+        var ckdata = CKEDITOR.instances.maildesc.getData();
+        $("#hid-des").val(ckdata);
+        var body = $("#hid-des").val();
+        var newbody = body.toString();
+
+        if ($("#newsletter-publish").valid())
+        {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Newsletter",
+                data: {
+                    Sub: sub,
+                    Head: head,
+                    Body: newbody,
+                }
+            })
+            .done(function (response) {
+                if (response == "true") {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Test Sent successfully ',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                })
+            });
+        }
+
+    });
+
+    $("#publish").click(function () {
+        var sub = $("#subject").val();
+        var head = $("#head").val();
+        var ckdata = CKEDITOR.instances.maildesc.getData();
+        $("#hid-des").val(ckdata);
+        var body = $("#hid-des").val();
+        var newbody = body.toString();
+
+        if ($("#newsletter-publish").valid()) {
+            $.ajax({
+                url: "/Admin/NewsletterFinal",
+                data: {
+                    Sub: sub,
+                    Head: head,
+                    Body: newbody,
+                }
+            })
+            .done(function (response) {
+                if (response == "true") {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Yay! ',
+                        text: 'Newsletter Published Successfully',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    setTimeout(function () {// wait for 5 secs(2)
+                        window.location.reload(); // then reload the page.(3)
+                    }, 1550);
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+            });
+        }
+    });
+
+
+</script>

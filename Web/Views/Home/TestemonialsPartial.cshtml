@@ -1,0 +1,39 @@
+﻿@model List<Entities.Testemonial>
+
+<section class="section" id="men">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="section-heading">
+                    <h2 class="prod-head">Testemonials</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="men-item-carousel">
+                    <div class="owl-testemonials-item owl-carousel">
+                        @foreach(var item in Model)
+                        {
+                            <div class="item testimonials-item">
+                                <div class="t-quote">
+                                    <i class="bi bi-quote"></i>
+                                </div>
+                                <div class="t-comment">
+                                    <p>
+                                        @item.Testimonial
+                                    </p>
+                                </div>
+                                <div class="t-name">
+                                    <h3>@item.Name</h3>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

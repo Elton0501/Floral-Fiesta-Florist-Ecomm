@@ -1,0 +1,343 @@
+﻿@model DataModels.UserOrdersDataModel
+@{
+    ViewBag.Title = "UserOreders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #stars .hover .bi {
+        color: red;
+    }
+    .order-item {
+        padding: 1rem 0;
+    }
+
+    .cart-container{
+        margin-top: 160px;
+    }
+
+    .p-desc {
+        color: #8d8b8b;
+
+    }
+
+    .item-img img {
+        width: 30%;
+    }
+
+    .item-price h6 {
+        text-align: right;
+        margin-right: 1rem
+    }
+
+    .qty-container {
+        display: flex;
+        align-items: center;
+        margin-top:0.7rem;
+    }
+
+    .orders-container{
+        margin-top:160px;
+    }
+
+    .tile {
+        width: 100%;
+        margin: 60px auto;
+    }
+
+    .item-price{
+        padding: 0 !important
+    }
+
+    #tile-1 .tab-pane {
+        padding: 50px 15px 15px;
+        color: var(--dark);
+    }
+
+    #tile-1 .nav-tabs {
+        position: relative;
+        border: none !important;
+        background-color: #fff;
+        /*   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2); */
+        border-radius: 6px;
+    }
+
+        #tile-1 .nav-tabs li {
+            margin: 0px !important;
+        }
+
+            #tile-1 .nav-tabs li a {
+                position: relative;
+                margin-right: 0px !important;
+                padding: 20px 3px !important;
+                font-size: 16px;
+                border: none !important;
+                color: var(--dark);
+            }
+
+        #tile-1 .nav-tabs a:hover {
+            background-color: #fff !important;
+            border: none;
+        }
+
+    #tile-1 .slider {
+        display: inline-block;
+        width: 30px;
+        height: 4px;
+        border-radius: 3px;
+        background-color: var(--primary);
+        position: absolute;
+        z-index: 1200;
+        bottom: 0;
+        transition: all .4s linear;
+    }
+
+    #tile-1 .nav-tabs .active {
+        background-color: transparent !important;
+        border: none !important;
+        color: var(--primary) !important;
+    }
+
+    .item-img img {
+        width: 30%;
+        margin: auto 0;
+    }
+
+    .item-price h6 {
+        text-align: right;
+        margin-right: 1rem
+    }
+
+    .qty-container {
+        display: flex;
+        align-items: center;
+        margin-top: 0.7rem;
+    }
+
+        .qty-container .input-qty {
+            text-align: center;
+            padding: 2px 3px;
+            border: 1px solid #d4d4d4;
+            max-width: 37px;
+        }
+
+        .qty-container .qty-btn-minus,
+        .qty-container .qty-btn-plus {
+            border: 1px solid #d4d4d4;
+            padding: 0px 0px;
+            font-size: 20px;
+            height: 30px;
+            width: 30px;
+            transition: 0.3s;
+        }
+
+        .qty-container .qty-btn-plus {
+            margin-left: -1px;
+        }
+
+        .qty-container .qty-btn-minus {
+            margin-right: -1px;
+        }
+
+    .theme-btn {
+        background: white;
+        padding: 0.5rem;
+        margin-top: 1rem;
+    }
+
+        .theme-btn:hover {
+            background: black;
+            color: white
+        }
+
+    .item-info span{
+        color:var(--primary);
+    }
+    /---------------------------/
+    .btn-cornered,
+    .input-cornered {
+        border-radius: 4px;
+    }
+</style>
+
+<div class="container orders-container" style="margin-top:10rem;">
+    <div class="order-tab">
+        <div class="tile" id="tile-1">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <div class="slider"></div>
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#current" role="tab" aria-controls="home" aria-selected="true"> Current Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#previous" role="tab" aria-controls="profile" aria-selected="false">Completed Orders</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="home-tab">
+                    <h3><i class="bi bi-bag-heart"></i>  Current Orders</h3>
+                    <hr />
+
+                    @if (Model.PendingOrderItems != null && Model.PendingOrderItems.Count() > 0)
+                    {
+                        foreach (var item in Model.PendingOrderItems)
+                        {
+                            var slot = OrdersService.Instance.SlotTime(item.SlotId);
+                            <div class="order-item ml-md-5 mr-md-5 row">
+                                <div class="col-9">
+                                    <div class="item-img d-flex">
+                                        <img src="@item.DefaultImage" />
+                                        <div class="item-info pl-3">
+                                            <h6>@item.Name</h6>
+                                            <h6>Qty: <span>@item.Quantity</span></h6>
+                                            <h6>Delivery Date: <span>@item.DDate"</span></h6>
+                                            <h6>Delivery Time: <span>@slot</span></h6>
+                                            <h6>Status: <span>@item.Orders.OrderStatusName</span></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-price col-3">
+                                    <h6>Rs. @item.Price</h6>
+                                </div>
+                            </div>
+                            <hr />
+                        }
+                    }
+                </div>
+                <div class="tab-pane fade" id="previous" role="tabpanel" aria-labelledby="profile-tab">
+                    <h3><i class="bi bi-bag-check"></i>  Complete Orders</h3>
+                    <hr />
+
+                    @if (Model.CompleteOrderItems != null && Model.CompleteOrderItems.Count() > 0)
+                    {
+                        foreach (var item in Model.CompleteOrderItems)
+                        {
+                            <div class="order-item ml-md-5 mr-md-5 row">
+                                <div class="col-9">
+                                    <div class="item-img d-flex">
+                                        <img src="@item.DefaultImage" />    
+                                        <div class="item-info pl-3">
+                                            <h6>@item.Name</h6>
+                                            <h6>Qty: <span>@item.Quantity</span></h6>
+                                            <h6>Delivered Date:<br /> <span>@(item.Orders.DeliveredDate != null && item.Orders.DeliveredDate != string.Empty ? Convert.ToDateTime(item.Orders.DeliveredDate).ToString("dd MMMM yyyy") : "-")</span></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-price col-3">
+                                    <h6>Rs. @item.Price</h6>
+                                    <div class="ProductRate" id="@item.Product.Id">
+                                        <h6 class="rating-heading">Rate this Product</h6>
+                                        <span class="ratingMessage mt-1"></span>
+                                        <div class="@("rate" + @item.Product.Id)">
+                                            <div class='rating-stars text-center'>
+                                                <ul id="stars" class="d-flex">
+                                                    <li class="star" data-value='1' data-id="@item.Product.Id">
+                                                        <i class="bi bi-star"></i>
+                                                    </li>
+                                                    <li class='star' data-value='2' data-id="@item.Product.Id">
+                                                        <i class="bi bi-star"></i>
+                                                    </li>
+                                                    <li class='star' data-value='3' data-id="@item.Product.Id">
+                                                        <i class='bi bi-star'></i>
+                                                    </li>
+                                                    <li class='star' data-value='4' data-id="@item.Product.Id">
+
+                                                        <i class="bi bi-star"></i>
+                                                    </li>
+                                                    <li class='star' data-value='5' data-id="@item.Product.Id">
+                                                        <i class="bi bi-star"></i>
+
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        }
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#tile-1 .nav-tabs a").click(function () {    
+        var position = $(this).parent().position();
+        var width = $(this).parent().width();
+        $("#tile-1 .slider").css({ "left": + position.left, "width": width });
+    });
+   
+
+    $(document).ready(function () {        
+        var status = '@Model.Status';
+        if (status == "previous") {
+            $("#home-tab").removeClass('active');
+            $("#profile-tab").addClass('active');
+            $("#current").removeClass('active show');
+            $("#previous").addClass('active show');            
+        }
+        var actWidth = $("#tile-1 .nav-tabs").find(".active").parent("li").width();
+        var actPosition = $("#tile-1 .nav-tabs .active").position();
+        $("#tile-1 .slider").css({ "left": + actPosition.left, "width": actWidth });
+    });
+
+
+    /* 1. Visualizing things on Hover - See next part for action on click */
+    $('#stars li').on('mouseover', function () {
+        var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
+        // Now highlight all the stars that's not after the current hovered star
+        $(this).parent().children('li.star').each(function (e) {
+            if (e < onStar) {
+                $(this).addClass('hover');
+            }
+            else {
+                $(this).removeClass('hover');
+            }
+        });
+    }).on('mouseout', function () {
+        $(this).parent().children('li.star').each(function (e) {
+            $(this).removeClass('hover');
+        });
+    });
+    /* 2. Action to perform on click */
+    $('#stars li').on('click', function () {
+        var value = $(this).attr("data-id");
+        var onStar = parseInt($(this).data('value'), 10); // The star currently selected
+        var stars = $(this).parent().children('li.star');
+        for (i = 0; i < stars.length; i++) {
+            $(stars[i]).removeClass('selected');
+        }
+        for (i = 0; i < onStar; i++) {
+            $(stars[i]).addClass('selected');
+        }
+        // JUST RESPONSE (Not needed)
+        var ratingValue = onStar;
+        $.ajax({
+            type: "POST",
+            url: "/Checkout/Rating",
+            data: {
+                PId: value,
+                starRating: ratingValue
+            },
+            success: function (response) {
+                if (response < 3) {
+                    $(".rate" + value).hide();
+                    $("#" + value).children(".ratingMessage").text("We will improve ourselves. You rated this " + response + " stars.");
+                    $("#" + value).children(".rating-heading").hide();
+                }
+                else {
+                    $(".rate" + value).hide();
+                    $("#" + value).children(".ratingMessage").text("Thanks! You rated this " + ratingValue + " stars.");
+                    $("#" + value).children(".rating-heading").hide();
+                }
+            }
+        })
+    });
+</script>

@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+    var url = Convert.ToString(TempData["URL"]);
+}
+
+<link href="~/Content/LoginCss.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<style>
+    footer {
+        margin-top: 0;
+    }
+
+    .login-box {
+        padding: 5rem 0;
+        max-width: 1500px;
+    }
+
+    .error {
+        color: var(--primary);
+    }
+
+    .logon-wrap {
+        background-color: #ffffffcc;
+        padding: 3rem 1rem;
+        margin: 0 0.5rem;
+        border-radius: 10px;
+    }
+
+    .inbor {
+        border: 1px solid var(--dark);
+        background: #21252908;
+        color: var(--dark) !important;
+    }
+
+        .inbor::placeholder {
+            color: var(--dark) !important;
+        }
+</style>
+
+<div class="img" style="background-image: url(/Content/Images/register-bg.jpg);">
+    <section class="ftco-section">
+        <div class="container login-box">
+
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="logon-wrap">
+                        <div class="login-wrap p-0">
+                            <h3 class="mb-4 text-center">Register</h3>
+                            <span class="font-italic" id="regMsg" style="color:var(--primary);"></span>
+                            <form class="signin-form" id="RegisterForm">
+                                <div class="form-group">
+                                    <input type="text" name="Name" id="Name" class="form-control inbor" placeholder="Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="Email" id="Email" class="form-control inbor" placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" name="MobileNumber" id="MobileNumber" class="form-control inbor" placeholder="Mobile No" required>
+                                </div>
+                                <div class="form-group">
+                                    <input id="password-field" type="password" name="Password" class="form-control inbor" placeholder="Password" required>
+                                    <span toggle="#password-field" class="bi bi-eye-slash- field-icon toggle-password"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input id="password" type="password" name="PasswordConfirm" class="form-control inbor" placeholder="Repeat Password" required>
+                                </div>
+                                <div class="form-group d-flex justify-content-sm-center">
+                                    <button type="button" style="border-radius:0;" class="form-control btn btn-primary submit px-3 w-50" id="UserRegister">Register</button>
+                                </div>
+                                <div class="form-group">
+                                    <div class="text-center">
+                                        <a class="font-italic" href="/login" style="color: var(--primary)">Already have an account? <span class="font-weight-bolder" style="font-size: 1.2rem; color: var(--dark); font-style: normal;">LOGIN NOW</span></a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(".toggle-password").click(function () {
+        $(this).toggleClass("bi-eye bi-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+      $("#RegisterForm").validate({
+          rules: {
+              MobileNumber: {
+                  number: true,
+                  required: true,
+                  minlength: 10,
+                  maxlength: 10,
+              },
+              Name: {
+                  required: true,
+                  minlength: 2,
+              },
+              Email: {
+                  required: true,
+                  email: true,
+              },
+              Password: {
+                  required: true,
+                  minlength: 5
+              },
+              PasswordConfirm: {
+                  required: true,
+                  minlength: 5,
+                  equalTo: "#password"
+              }
+          },
+          messages: {
+              MobileNumber: {
+                  number: '* Enter your valid contact number',
+                  required: '* Contact Number is required',
+                  minlength: '* Enter your valid contact number',
+                  maxlength: '* Enter your valid contact number',
+              },
+              Name: {
+                  required: '* Your name is required',
+              },
+              Email: {
+                  required: '* Email required',
+                  email: '* Enter your valid email'
+              },
+              Password: {
+                  required: '* Password required',
+                  minlength: '* Password should be min 5 characters',
+              },
+              PasswordConfirm: {
+                  required: '* Repeat Password required',
+                  minlength: '* Repeat password doen not match password',
+                  equalTo: '* Repeat password doen not match password'
+              }
+          }
+      });
+    $("#UserRegister").click(function () {
+      $("#UserRegister").prop('disabled', true);
+      if ($("#RegisterForm").valid()) {
+          var PhoneNumber = $("#MobileNumber").val();
+          var UserName = $("#Name").val();
+          var EmailId = $("#Email").val();
+          var password = $("#password-field").val();
+          $.ajax({
+              type: 'POST',
+              url: '/Account/Register',
+              data: {
+                  Mobile: PhoneNumber,
+                  Name: UserName,
+                  Email: EmailId,
+                  Password: password,
+              },
+              success: function (response) {
+                  if (response.result == true) {
+                      $("#regMsg").html("Please confirm your email by clicking the link sent in your inbox");
+                      $("#RegisterForm")[0].reset()
+                  }
+                  else {
+                      alert(response.msg);
+                      $("#UserLogin").prop('disabled', false);
+                  }
+              },
+              error: function (response) {
+                  alert("Something went wrong");
+                  $("#UserLogin").prop('disabled', false);
+              }
+          });
+      }
+      else {
+          $(".spinner-border").hide();
+      }
+    });
+</script>

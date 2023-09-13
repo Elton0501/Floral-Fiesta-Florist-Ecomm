@@ -1,0 +1,233 @@
+﻿@model DataModels.OrdersViewModel
+@{
+    Layout = null;
+    int count = 0;
+}
+<style>
+    #OrderViewTable_filter {
+        position: absolute;
+        right: 0;
+        top: 0px;
+    }
+
+    table.dataTable tbody tr:hover {
+        background: #f9f9f9;
+    }
+</style>
+<table class="product-table table table-bordered table-responsive mt-3" id="OrderViewTable" cellspacing="0" style="width:99%;">
+    <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th class="noprint">Action</th>
+            <th>
+                Date
+            </th>
+            <th>
+                Order Id
+            </th>
+            <th>
+                Payment
+            </th>
+            <th class="noprint">
+                Payment Status
+            </th>
+            <th class="d-none Payment_Status">
+                Payment Status
+            </th>
+            <th class="noprint">
+                Order Status
+            </th>
+            <th class="d-none">
+                Order Status
+            </th>
+            <th>
+                Customer
+            </th>
+            <th>
+                Contact
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Del. Charges
+            </th>
+            <th>
+                Total Amount
+            </th>
+
+            <th>
+                Pincode
+            </th>
+            <th>
+                Shipping Address
+            </th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.Orders)
+    {
+        count = count + 1;
+        <tr id="@("tr"+item.OrderId)">
+            <td>@count</td>
+            <td class="noprint">
+                <div>
+                    <button class="btn btn-primary orderDetails" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-id="@item.OrderId"><i class="bi bi-eye"></i></button>
+                </div>
+            </td>
+            <td>
+                @item.CreatedOn.ToString("MMMM-dd-yyyy")
+            </td>
+            <td style="padding: 15px 42px;">
+                @item.OrderId
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentTypeString)
+            </td>
+            <td style="padding: 8px 25px;">
+                <select id="@("PaymentStatus"+ item.OrderId)" class="PaymentStatus" onfocus="handleOnFocus1(this);"
+                        onchange="if(handleOnChange1(this) == false) { return false; }"
+                        data-original-selected-index="">
+                    @for (int i = 0; i < Model.PaymentStatusEnum.Count(); i++)
+                    {
+                        <option data-id="@item.OrderId" value="@Model.PaymentStatusEnum.ElementAtOrDefault(i).Id"
+                                @(Model.PaymentStatusEnum.ElementAtOrDefault(i).Id == item.PaymentStatus ? "selected" : "")
+                                class="@(Model.PaymentStatusEnum.ElementAtOrDefault(i).Id == item.PaymentStatus ? "" : "noprint")">
+                            @Model.PaymentStatusEnum.ElementAtOrDefault(i).Name
+                        </option>
+                    }
+                </select>
+            </td>
+            <td id="@("PaymentStatusPrint" + item.OrderId)" class="d-none">
+                @item.PaymentStatusString
+            </td>
+            <td>
+                <select class="orderStatus" onfocus="handleOnFocus(this);"
+                        onchange="if(handleOnChange(this) == false) { return false; }"
+                        data-original-selected-index="">
+                    @for (int i = 0; i < Model.OrderStatusEnum.Count(); i++)
+                    {
+                        <option data-id="@item.OrderId" value="@Model.OrderStatusEnum.ElementAtOrDefault(i).Id"
+                                @(Model.OrderStatusEnum.ElementAtOrDefault(i).Id == item.OrderStatus ? "selected" : "")>
+                            @Model.OrderStatusEnum.ElementAtOrDefault(i).Name
+                        </option>
+                    }
+                </select>
+            </td>
+            <td id="@("orderStatusPrint" + item.OrderId)" class="d-none">
+                @item.OrderStatusString
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverMobileNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverEmail)
+            </td>
+            <td style=" padding: 15px 52px;">
+                @Html.DisplayFor(modelItem => item.BillAmount)
+            </td>
+            <td style=" padding: 15px 52px;">
+                @Html.DisplayFor(modelItem => item.DeliveryCharges)
+            </td>
+            <td style=" padding: 15px 52px;">
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+            <td style="text-align: initial !important;">
+                @Html.DisplayFor(modelItem => item.PinCode)
+            </td>
+            <td style="text-align: initial !important;">
+                @Html.DisplayFor(modelItem => item.ShippingAddress)
+            </td>
+        </tr>
+    }
+</table>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body orderdetailsPartial">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //$('#ExportReporttoExcel').on('click', function () {
+    //    clickExcel();
+    //});
+    //function clickExcel() {
+    //    $('.buttons-excel').click();
+    //}
+    function CheckOrderCookie() {
+        var existing = $.cookie('newOrders');
+        if (existing != undefined && existing != "" && existing != null && existing != "null") {
+            newOrdersList = existing.split('-');
+            //$("#ordersCountCookie").removeClass("d-none");
+            //$("#ordersCountCookie").html(newOrdersList.length);
+
+            $.each(newOrdersList, function (index, value) {
+                $('#tr' + value).css({ 'background-color': 'rgb(243 243 243)' });
+            });
+        }
+    }
+    $(document).ready(function () {
+        CheckOrderCookie();
+        $('#OrderViewTable').DataTable({
+            "ordering": true,
+            "dom": 'Bfrtip',
+            stateSave: true,
+            buttons: [
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: "thead th:not(.noprint)",
+                    },
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: "thead th:not(.noprint)",
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: "thead th:not(.noprint)",
+                    },
+                },
+            ],
+            "sEmptyTable": "You do not have records."
+        });
+        var countPO = '@Model.Orders.Count()';
+        $("#OrdersCount").html(countPO);
+        setTimeout(() => {
+            var existing = $.cookie('newOrders');
+            if (existing != undefined && existing != "" && existing != null && existing != "null") {
+                $.cookie('newOrders', null, { path: '/' });
+            }
+        }, 12000);
+    });
+    $(".orderDetails").click(function () {
+        var dataId = $(this).attr('data-id');
+        $.ajax({
+            url: '@Url.Action("OrderDetails", "Admin")',
+            data: {
+                OrderID: dataId,
+            }
+        })
+        .done(function (response) {
+            $(".orderdetailsPartial").html(response);
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+           Swal.fire({
+               icon: 'error',
+               title: 'Oops...',
+               text: 'Something went wrong!',
+           })
+        });
+    });
+</script>

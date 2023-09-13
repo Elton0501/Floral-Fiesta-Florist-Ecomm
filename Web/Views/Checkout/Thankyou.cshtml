@@ -1,0 +1,162 @@
+﻿@model IEnumerable<Entities.OrderItems>
+@{
+    ViewBag.Title = "Thankyou";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var emailReceipt = TempData["EmailReceipt"].ToString();
+}
+
+<style>
+    h5{
+        margin-bottom: 1.2rem;
+    }
+
+    h6{
+        margin-bottom:0.5rem
+    }
+
+    .thankyou-wrapper img{
+        width: 100%;
+    }
+
+    .name-id {
+        justify-content: space-between
+    }
+
+    .thank-you {
+        margin-top: 160px;
+    }
+
+    .ty-content{
+        text-align:center;
+    }
+
+    .order-item {
+        padding: 1rem 0;
+    }
+
+    .item-img img{
+        width: 30%;
+    }
+
+    .item-price h6{
+        text-align: right;
+        margin-right: 1rem
+    }
+
+    .main-container{
+        color: var(--dark);
+    }
+
+    .item-info span{
+        color: var(--primary);
+    }
+
+    .total-amts h6 {
+        text-align: right;
+        margin-right: 1rem
+    }
+</style>
+
+<div class="container thank-you">
+    <section class="login-main-wrapper">
+        <div class="main-container">
+            <div class="login-process">
+                <div class="login-main-container">
+                    <div class="thankyou-wrapper">
+                        <div id="ty-show">
+                            @if (emailReceipt == "False")
+                            {
+                                <h1 style="text-align: center;"><img src="http://montco.happeningmag.com/wp-content/uploads/2014/11/thankyou.png" alt="thanks" /></h1>
+                                <div class="ty-content">
+                                    <h4>We have recieved your order.. </h4>
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="~/Content/Images/green-logo.png" />
+                            }
+
+                        </div>
+                        <hr />
+                        <div class="order-details">
+                            <h5 style="text-align:center">Order Details</h5>
+                            <div class="d-md-flex name-id">
+                                <h6>Name: <span>@Model.FirstOrDefault().Orders.ReceiverName</span></h6>
+                                <h6>Order Id: <span class="text-capitalize">OrderID @Model.FirstOrDefault().Orders.OrderId</span></h6>
+
+                            </div>
+                            <h6>Contact: @Model.FirstOrDefault().Orders.ReceiverMobileNumber</h6>
+                            <h6>Email: @Model.FirstOrDefault().Orders.ReceiverEmail</h6>
+                            <h6>Shipping Address: @Model.FirstOrDefault().Orders.ShippingAddress</h6>
+                        </div>
+                        <hr />
+
+                        <div class="order-summary">
+                            <h5 style="text-align:center">Order Summary</h5>
+                            @foreach (var item in Model)
+                            {
+                                var slot = OrdersService.Instance.SlotTime(item.SlotId);
+                                <div class="order-item ml-md-5 mr-md-5 row">
+                                    <div class="col-8">
+                                        <div class="item-img d-flex">
+                                            <img src="@item.DefaultImage" />
+                                            <div class="item-info pl-3">
+                                                <h6>@item.Name</h6>
+                                                <h6>Qty: <span>@item.Quantity</span></h6>
+                                                <h6>Delivery Date: <span>@item.DDate</span></h6>
+                                                <h6>Delivery Time: <span>@slot</span></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-price col-4">
+                                        <h6>Rs. @item.Price</h6>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <hr />
+                        <div class="total-sumary d-flex justify-content-end">
+                            <div class="total-labels">
+                                <h6>Total &nbsp; &nbsp; &nbsp;</h6>
+                                <h6>Delivery &nbsp; &nbsp; &nbsp;</h6>
+                                <h6>Grand Total &nbsp; &nbsp; &nbsp;</h6>
+                            </div> 
+                            <div class="total-rs">
+                                <h6>Rs.&nbsp;</h6>
+                                @{ string aab = Model.FirstOrDefault().Orders.DeliveryCharges != 0 ? "" : "opacity: 0;";}
+                                <h6 style="@aab">
+                                    Rs.&nbsp;
+                                </h6>
+                                <h6>Rs.&nbsp;</h6>
+                            </div>
+                            <div class="total-amts mr-md-5">
+                                <h6>@Model.FirstOrDefault().Orders.BillAmount</h6>
+                                <h6>
+                                    @{ string aaa = Model.FirstOrDefault().Orders.DeliveryCharges != 0 ? Model.FirstOrDefault().Orders.DeliveryCharges.ToString() + ".00" : "Free Delivery";}
+                                    @aaa
+                                </h6>
+                                <h6>@Model.FirstOrDefault().Orders.TotalAmount</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div id="ty-footer" class="text-center">
+                <p>We hope your shopping experience with Floral Fiesta was amazing</p>
+                <p>Hope we see you soon...</p>
+                <a href="@Url.Action("Index" , "Home")" class="light-btn btn mt-4">Continue Shopping &nbsp; <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        if ('@emailReceipt' == "True") {
+        $("#ty-footer").hide();
+        $(".header-area").hide();
+        $("#footer").hide();
+    }
+    });
+</script>

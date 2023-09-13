@@ -1,0 +1,309 @@
+﻿@model Entities.Product
+@{
+    ViewBag.Title = Model.Name;
+    var catname = CategoryService.Instance.CategoryName(Model.CategoryId);
+}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
+
+
+<style>
+    #product {
+        margin-top: 160px;
+    }
+
+    .final-gallery {
+        padding: 0 10rem;
+    }
+
+    .nav-img img {
+        width: 96%;
+    }
+
+    .slick-list {
+        position: relative;
+    }
+
+    .slick-arrow {
+        width: 50px;
+        height: 50px;
+        align-self: center;
+        position: absolute;
+        z-index: 999;
+        top: 50%;
+        background-color: #ffffff6b;
+        border: 2px solid black;
+        color: black;
+    }
+
+        .slick-arrow:hover {
+            background-color: black;
+            border: 2px solid black;
+            color: var(--text);
+        }
+
+    .slick-current img {
+        width: 100%;
+    }
+
+    .slick-next {
+        right: 0;
+    }
+
+    .slick-prev {
+        left: 0;
+    }
+
+    .slider-for {
+        padding-bottom: 10px;
+    }
+
+    @@media(max-width : 1024px) {
+        .final-gallery {
+            padding: 0px 3rem;
+        }
+    }
+
+    @@media(max-width : 912px) {
+        .final-gallery {
+            padding: 0px 0rem;
+        }
+    }
+
+    @@media(max-width : 500px) {
+        .final-gallery {
+            padding: 0px 0rem;
+        }
+
+        .right-content {
+            padding-top: 2rem;
+        }
+
+        .stars {
+            padding-top: 2rem;
+        }
+    }
+</style>
+
+<!-- ***** Product Area Starts ***** -->
+<section class="section" id="product">
+    <div class="container">
+        <div class="row">
+            <div class="final-gallery-box col-md-6 col-lg-8 col-12">
+                <div class="final-gallery">
+
+
+                    <div class="product__carousel">
+
+                        <!-- Swiper and EasyZoom plugins start -->
+                        <div class="main">
+                            <div class="slider slider-for">
+                                @foreach (var item in Model.ProductImages)
+                                {
+                                    <div class="cur-img"><img src="@item.Image" /></div>
+                                }
+                            </div>
+                            @if (Model.ProductImages.Count() > 3)
+                            {
+                                <div class="slider slider-nav">
+                                    @foreach (var item in Model.ProductImages)
+                                    {
+                                        <div class="nav-img"><img src="@item.Image" /></div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <!-- Swiper and EasyZoom plugins end -->
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-lg-4 col-12">
+                <div class="right-content">
+                    <h4>@Model.Name</h4>
+                    <span class="price">
+                        @if (Model.CategoryId != 3)
+                        {
+                            if (Model.Price > 0)
+                            {
+                                <label>₹ @(Model.DiscountPrice > 0 ? Model.DiscountPrice : Model.Price) </label>
+                                <label style="text-decoration: line-through;" class="ml-2 text-danger @(Model.DiscountPrice > 0 ? "" : "d-none")">₹ @Model.Price</label>
+                            }
+                        }
+                    </span>
+                    <ul class="stars">
+                        <li><i class="@(Model.Rating >= 1 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                        <li><i class="@(Model.Rating >= 2 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                        <li><i class="@(Model.Rating >= 3 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                        <li><i class="@(Model.Rating >= 4 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                        <li><i class="@(Model.Rating >= 5 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                    </ul>
+                    <span>@Model.Description</span>
+                    @if (Model.isWhatsapp == false)
+                    {
+                        if (Model.Price > 0)
+                        {
+                            <div class="quantity-content qtyContainer @(Model.isAvailCart == true ? "d-none" : "")">
+                                <div class="left-content">
+                                    <h6>No. of Orders</h6>
+                                </div>
+                                <div class="right-content">
+                                    <div class="quantity buttons_added">
+                                        <input type="button" value="-" class="minus qty-btn-minus">
+                                        <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text input-qty" size="4" pattern="" inputmode="">
+                                        <input type="button" value="+" class="plus qty-btn-plus">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="total mt-4">
+                                <h4>Total: ₹ <label id="ProTotalPrice">@(Model.DiscountPrice > 0 ? Model.DiscountPrice : Model.Price)</label></h4>
+                                <div class="AddCartDiv main-border-button @(Model.isAvailCart == true ? "d-none" : "")"><a class="light-btn" onclick="cart('@Model.Id')" id="AddCart">Add To Cart</a></div>
+                                <div class="RemoveCartDiv main-border-button @(Model.isAvailCart == true ? "" : "d-none")"><a onclick="RemoveCart('@Model.cartId')" id="RemoveCart" class="bg-danger text-white border-0" style="cursor:pointer;">Remove from Cart</a></div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="main-border-button mt-4"><a href="https://wa.me/919967060009?text=hey%0aI came across the @catname page on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect? for @Model.Name" target="_blank" class="light-btn">Contact on Whatsapp <i class="bi bi-whatsapp"></i></a></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Product Area Ends ***** -->
+<input value="@(Model.DiscountPrice > 0 ? Model.DiscountPrice : Model.Price)" id="ProPrice" hidden/>
+<script src="~/Scripts/slick.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".slick-next").html('<i class="bi bi-chevron-right"></i>');
+        $(".slick-prev").html('<i class="bi bi-chevron-left"></i>');
+    });
+    function cart(id) {
+        $("#AddCart").prop('disabled', true);
+        var quantity = parseInt($(".input-qty").val());
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("AddInCart", "Cart")',
+                data: {
+                    ProductId: id,
+                    Quantity: quantity
+                },
+                success: function (result) {
+                    if (result.Result == true) {
+                        $("#cart-quantity").text(result.Count);
+                        $(".AddCartDiv").addClass("d-none");
+                        $(".RemoveCartDiv").removeClass("d-none");
+                        $(".qtyContainer").addClass("d-none");
+                        document.getElementById("RemoveCart").setAttribute("onClick", "RemoveCart(" + result.CartId +")");
+                    }
+                    else if (result.isLogin == "false")
+                    {
+                       $.ajax({
+                           url: '@Url.Action("PartialLogin", "Account")',
+                           data: {
+                               url: "@(Url.Action("ProductView", "Product", new { Id = HelperService.Instance.ConvertStringToHex(TempData["ProId"].ToString().ToString(), System.Text.Encoding.Unicode), name = TempData["ProName"].ToString().Replace(' ', '-').TrimStart('-').TrimEnd('-') }))",
+                           },
+                           success: function (result) {
+                               $(".loginPartial").html(result);
+                               $('#exampleModalCenter1').modal('show');
+                               $(".login-fullscreen").removeClass('col-md-6 col-lg-4');
+                           },
+                            error: function () {
+                                alert("Something Went Wrong");
+                           }
+                       })
+                    }
+                },
+                 error: function () {
+                     alert("Something Went Wrong");
+                     $("#AddCart").prop('disabled', false);
+                }
+            })
+        }
+        $("#AddCart").prop('disabled', false);
+    }
+
+    function RemoveCart(id) {
+        $("#RemoveCart").prop('disabled', true);
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("RemoveInCart", "Cart")',
+                data: {
+                    CartItemId: id,
+                    homePage: false,
+                },
+                success: function (response) {
+                   if (response.Result == true)
+                   {
+                       $("#cart-quantity").html(response.Count);
+                       $(".AddCartDiv").removeClass("d-none");
+                       $(".RemoveCartDiv").addClass("d-none");
+                       $(".qtyContainer").removeClass("d-none");
+                       $(".input-qty").val(1);
+                       priceAction();
+                   }
+                   else {
+                       alert("Sorry! Something Went Wrong");
+                   }
+                },
+                 error: function () {
+                     alert("Sorry! Something Went Wrong");
+                }
+            })
+        }
+        $("#RemoveCart").prop('disabled', false);
+    }
+
+    $('.slider-for').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        fade: true,
+        asNavFor: '.slider-nav'
+    });
+    $('.slider-nav').slick({
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        asNavFor: '.slider-for',
+        dots: false,
+        arrows: false,
+        centerMode: true,
+        focusOnSelect: true
+    });
+
+    var buttonPlus = $(".qty-btn-plus");
+    var buttonMinus = $(".qty-btn-minus");
+
+    var incrementPlus = buttonPlus.click(function () {
+        var $n = $(this)
+            .parent(".quantity")
+            .find(".input-qty");
+        $n.val(Number($n.val()) + 1);
+        var id = $(this).attr("data-id");
+        priceAction();
+    });
+
+    var incrementMinus = buttonMinus.click(function () {
+        var $n = $(this)
+            .parent(".quantity")
+            .find(".input-qty");
+        var amount = Number($n.val());
+        if (amount > 1) {
+            $n.val(amount - 1);
+            var id = $(this).attr("data-id");
+            priceAction();
+        }
+    });
+
+    function priceAction() {
+        var price = parseInt($("#ProPrice").val());
+        var quantity = parseInt($(".input-qty").val());
+        var totalPrice = price * quantity;
+        $("#ProTotalPrice").html(totalPrice.toFixed(2));
+    }
+</script>
+

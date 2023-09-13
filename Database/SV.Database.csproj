@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{265373DD-9C62-40FB-BA15-25E93DBF6640}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Database</RootNamespace>
+    <AssemblyName>Database</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\202301200735545_init.cs" />
+    <Compile Include="Migrations\202301200735545_init.designer.cs">
+      <DependentUpon>202301200735545_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202301230745083_seasonal.cs" />
+    <Compile Include="Migrations\202301230745083_seasonal.designer.cs">
+      <DependentUpon>202301230745083_seasonal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202301260528197_whatsapp.cs" />
+    <Compile Include="Migrations\202301260528197_whatsapp.designer.cs">
+      <DependentUpon>202301260528197_whatsapp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202301260858259_price.cs" />
+    <Compile Include="Migrations\202301260858259_price.designer.cs">
+      <DependentUpon>202301260858259_price.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202301261312405_testemonial.cs" />
+    <Compile Include="Migrations\202301261312405_testemonial.designer.cs">
+      <DependentUpon>202301261312405_testemonial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302030922209_cart.cs" />
+    <Compile Include="Migrations\202302030922209_cart.designer.cs">
+      <DependentUpon>202302030922209_cart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302031304328_slots.cs" />
+    <Compile Include="Migrations\202302031304328_slots.designer.cs">
+      <DependentUpon>202302031304328_slots.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302040554195_exit.cs" />
+    <Compile Include="Migrations\202302040554195_exit.designer.cs">
+      <DependentUpon>202302040554195_exit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302041545306_mobileno.cs" />
+    <Compile Include="Migrations\202302041545306_mobileno.designer.cs">
+      <DependentUpon>202302041545306_mobileno.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302041547022_mobilenoremove.cs" />
+    <Compile Include="Migrations\202302041547022_mobilenoremove.designer.cs">
+      <DependentUpon>202302041547022_mobilenoremove.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302080649093_descriotion.cs" />
+    <Compile Include="Migrations\202302080649093_descriotion.designer.cs">
+      <DependentUpon>202302080649093_descriotion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202302081445007_descriptions.cs" />
+    <Compile Include="Migrations\202302081445007_descriptions.designer.cs">
+      <DependentUpon>202302081445007_descriptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SVIContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{69AD3182-1860-45E2-948D-F6E7290809AF}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202301200735545_init.resx">
+      <DependentUpon>202301200735545_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202301230745083_seasonal.resx">
+      <DependentUpon>202301230745083_seasonal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202301260528197_whatsapp.resx">
+      <DependentUpon>202301260528197_whatsapp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202301260858259_price.resx">
+      <DependentUpon>202301260858259_price.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202301261312405_testemonial.resx">
+      <DependentUpon>202301261312405_testemonial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302030922209_cart.resx">
+      <DependentUpon>202302030922209_cart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302031304328_slots.resx">
+      <DependentUpon>202302031304328_slots.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302040554195_exit.resx">
+      <DependentUpon>202302040554195_exit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302041545306_mobileno.resx">
+      <DependentUpon>202302041545306_mobileno.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302041547022_mobilenoremove.resx">
+      <DependentUpon>202302041547022_mobilenoremove.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302080649093_descriotion.resx">
+      <DependentUpon>202302080649093_descriotion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202302081445007_descriptions.resx">
+      <DependentUpon>202302081445007_descriptions.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

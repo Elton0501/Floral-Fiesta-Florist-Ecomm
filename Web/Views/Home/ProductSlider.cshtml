@@ -1,0 +1,174 @@
+﻿@model DataModels.ProductSliderDataModel
+@{ 
+    int imgcount = 0;
+    var type = TempData["catType"];
+}
+
+<style>
+    .light-pro-bg {
+        border: 5px solid var(--dark);
+        background-color: #417f343b;
+    }
+
+    .dark-pro-bg {
+        border: 5px solid var(--primary);
+        background-color: white;
+    }
+</style>
+
+@if (Model != null && Model.Product != null)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="men-item-carousel">
+                <div class="owl-men-item owl-carousel">
+                    @foreach (var item in Model.Product)
+                    {
+                        imgcount = imgcount + 1;
+                        var catname = CategoryService.Instance.CategoryName(item.CategoryId);
+                        if (item.Name != "Decor")
+                        {
+                            <div class="item">
+                                <div class="thumb">
+                                    <div class="hover-content">
+                                        <ul>
+                                            <li><a href="@Url.Action("ProductView", "Product",new {Id= HelperService.Instance.ConvertStringToHex(item.Id.ToString(),System.Text.Encoding.Unicode),name=item.Name.Replace(' ','-').TrimStart('-').TrimEnd('-') })"><i class="bi bi-eye"></i></a></li>
+                                            @if (item.isWhatsapp == false)
+                                            {
+                                                <li class="@("RemoveCartClassli" + item.Id) @(item.isAvailCart == true ? "" : "d-none")"><a class="@("RemoveCartClass" + item.Id) bg-danger text-white" id="@("RemoveCart" + item.Id)" onclick="RemoveCart('@item.Id')" style="cursor:pointer;"><i class="bi bi-bag-x"></i></a></li>
+                                                <li class="@("AddCartClassli" + item.Id) @(item.isAvailCart == true ? "d-none" : "")"><a class="@("AddCartClass" + item.Id)" id="@("AddCart" + item.Id)" onclick="cart('@item.Id')" style="cursor:pointer;"><i class="bi bi-bag-plus"></i></a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href="https://wa.me/919967060009?text=hey%0aI came across the @catname on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect? for @item.Name" target="_blank" style="cursor:pointer; color:var(--primary)"><i class="bi bi-whatsapp"></i></a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <img src="@item.DefaultImage" id="@(type + imgcount.ToString())" alt="">
+                                </div>
+                                <div class="down-content">
+                                    <h4 class="downcontent-h4">@item.Name</h4>
+                                    <div class="d-flex">
+                                            <span>₹ @(item.DiscountPrice > 0 ? item.DiscountPrice : item.Price)</span>
+                                            <span style="text-decoration: line-through;" class="ml-2 text-danger @(item.DiscountPrice > 0 ? "" : "d-none")">₹ @item.Price</span>
+                                    </div>
+                                    <ul class="stars">
+                                        <li><i class="@(item.Rating >= 1 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                                        <li><i class="@(item.Rating >= 2 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                                        <li><i class="@(item.Rating >= 3 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                                        <li><i class="@(item.Rating >= 4 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                                        <li><i class="@(item.Rating >= 5 ? "bi bi-star-fill":"bi bi-star")"></i></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+            <input value="@Model.Product.Count()" type="text" class="typeCount" hidden />
+        </div>
+    </div>
+}
+<!-- Button trigger modal -->
+
+<script>
+    function cart(id) {
+        $("#Cart" + id).prop('disabled', true);
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("AddInCart", "Cart")',
+                data: {
+                    ProductId: id
+                },
+                success: function (result) {
+                    if (result.Result == true) {
+                        $("#cart-quantity").text(result.Count);
+                        $(".RemoveCartClassli" + id).removeClass("d-none");
+                        $(".AddCartClassli" + id).addClass("d-none");
+                        createNotification("Added to cart","Add");
+                    }
+                    else if (result.isLogin == "false")
+                    {
+                       $.ajax({
+                           url: '@Url.Action("PartialLogin", "Account")',
+                           data: {
+                               url: "/Home/Index",
+                           },
+                           success: function (result) {
+                               $(".loginPartial").html(result);
+                               $('#exampleModalCenter1').modal('show');
+                               $(".login-fullscreen").removeClass('col-md-6 col-lg-4');
+                           },
+                            error: function () {
+                                alert("Something Went Wrong");
+                           }
+                       })
+                    }
+                },
+                 error: function () {
+                     alert("Something Went Wrong");
+                     $("#Cart" + id).prop('disabled', false);
+                }
+            })
+        }
+        $("#Cart" + id).prop('disabled', false);
+    }
+    function RemoveCart(id) {
+        $("#Cart" + id).prop('disabled', true);
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("RemoveInCart", "Cart")',
+                data: {
+                    CartItemId: id,
+                    homePage: true,
+                },
+                success: function (response) {
+                   if (response.Result == true)
+                   {
+                       $("#cart-quantity").html(response.Count);
+                       $(".RemoveCartClassli" + id).addClass("d-none");
+                       $(".AddCartClassli" + id).removeClass("d-none");
+                       createNotification("Removed from Cart","Remove");
+                   }
+                   else {
+                       alert("Sorry! Something Went Wrong");
+                   }
+                },
+                 error: function () {
+                     alert("Sorry! Something Went Wrong");
+                }
+            })
+        }
+        $("#Cart" + id).prop('disabled', false);
+    }
+    const toasts = document.getElementById('toasts')
+    function createNotification(messages, type) {
+        $("#toasts").html("");
+        const notif = document.createElement('div')
+        notif.classList.add('toast')
+        if (type == "Add") {
+            var styles = {
+                border: "2px solid #28a745",
+                color: "#28a745"
+            };
+            $("#toasts").css(styles);
+            notif.innerHTML = '<i class=\"bi bi-check-circle-fill pr-2\" style="font-size: 22px;"></i>' + messages;
+        }
+        else {
+            var styles1 = {
+                border: "2px solid #dc3545",
+                color: "#dc3545"
+            };
+            $("#toasts").css(styles1);
+            notif.innerHTML = '<i class=\"bi bi-x-circle-fill pr-2\" style="font-size: 22px;"></i>' + messages;
+        }
+        toasts.appendChild(notif)
+
+        setTimeout(() => {
+            notif.remove()
+        }, 5000);
+    }
+</script>
