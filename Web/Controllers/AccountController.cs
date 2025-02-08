@@ -115,7 +115,7 @@ namespace Web.Controllers
                     }
                     if (result.Value2 == "Admin")
                     {
-                        HttpContext.Session["Admin"] = Email;
+                        Session["Admin"] = Email;
                         Url = "/Admin/Index";
                     }
                     else

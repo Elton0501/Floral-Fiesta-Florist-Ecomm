@@ -12,7 +12,7 @@ namespace Web.Controllers
         {
             if (filterContext.HttpContext.Session["Admin"] == null)
             {
-                filterContext.Result = new RedirectResult("/Home/Index");
+                filterContext.Result = new RedirectResult("/login");
             }
         }
     }
