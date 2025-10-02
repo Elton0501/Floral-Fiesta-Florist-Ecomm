@@ -1,4 +1,4 @@
-﻿@model DataModels.OrdersViewModel
+@model DataModels.OrdersViewModel
 @{
     Layout = null;
     int count = 0;
@@ -211,7 +211,7 @@
             }
         }, 12000);
     });
-    $(".orderDetails").click(function () {
+	 $(".orderDetails").click(function () {
         var dataId = $(this).attr('data-id');
         $.ajax({
             url: '@Url.Action("OrderDetails", "Admin")',
@@ -227,7 +227,8 @@
                icon: 'error',
                title: 'Oops...',
                text: 'Something went wrong!',
-           })
-        });
-    });
+        })
+     });
+ });
+   
 </script>

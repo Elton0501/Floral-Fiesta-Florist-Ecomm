@@ -1,4 +1,4 @@
-﻿@model DataModels.AddressDataModels
+@model DataModels.AddressDataModels
 @{
     ViewBag.Title = "DeliveryAddress";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -226,14 +226,14 @@
                     <div class="row">
                         <div class="col-lg-7">
                             <label>
-                                <span class="fname">Recievers Name <span class="required">*</span></span>
+                                <span class="fname">Reciever's Name <span class="required">*</span></span>
                                 <br />
                                 <br />
                                 <input type="text" name="Name" value="@Model.Name" required>
                                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger mt-1" })
                             </label>
                             <label>
-                                <span class="fname">Recievers Phone <span class="required">*</span></span>
+                                <span class="fname">Reciever's Phone <span class="required">*</span></span>
                                 <br />
                                 <br />
                                 <input type="tel" min="10" max="10" id="MobileNumber" name="MobileNumber" value="@Model.MobileNumber">
@@ -246,8 +246,9 @@
                                 <input type="email" name="Email" value="@Model.Email">
                                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger mt-1" })
                             </label>
-                            <hr>
+							 <hr>
                             <h5 style="color:var(--dark);">Recievers Address:</h5>
+                            <label>
                             <label>
                                 <span class="fname">Flat, House no., Building, Company, Apartment<span class="required">*</span></span>
                                 <br />
@@ -314,8 +315,8 @@
                                 <div class="row">
                                     <div class="col-lg-6">Order Total:</div>
                                     <div class="col-lg-6">Rs. <span class="totalamount"></span></div>
-                                    <input name="TotalAmount" id="totalamount" readonly hidden/>
-                                </div><br>
+									<input name="TotalAmount" id="totalamount" readonly hidden/>
+                                </div>
                                 <h2 class="yorder-font">Payment Method</h2>
                                 <div>
                                     <label id="PaymentMethod-error" class="error" for="PaymentMethod"></label>
@@ -341,6 +342,7 @@
         }
     </div>
 </div>
+
 <script>
 
     $(document).ready(function () {
@@ -374,7 +376,7 @@
                             },
                             success: function (response) {
                                 if (response.Result == "true") {
-                                    debugger
+                                    
                                     $("#City").val(datas.PostOffice[0].District);
                                     $("#State").val(datas.PostOffice[0].State);
                                     distance(pin);
@@ -534,7 +536,7 @@
                                 lon: Lon
                             },
                             success: function (response) {
-                                debugger
+                                
                                 $("#DeliveryAmount").val(response);
                                 $(".deliveryamount").html(response + ".00");
                                 var delamtt = $("#DeliveryAmount").val();

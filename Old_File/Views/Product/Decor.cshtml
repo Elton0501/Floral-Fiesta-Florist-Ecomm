@@ -1,0 +1,131 @@
+﻿@model Entities.Product
+@{
+    ViewBag.Title = "Decor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var catname = CategoryService.Instance.Category(Model.CategoryId);
+}
+
+<style>
+    .mod-ful {
+        width: -webkit-fill-available;
+    }
+
+    .modal-header {
+        position: absolute;
+        z-index: 999;
+        width: 100%;
+        border-bottom: navajowhite;
+    }
+
+    .modal-body {
+        position: relative;
+    }
+
+    .close{
+        color: red;
+        padding: 1.5rem;
+        font-size: 2rem;
+    }
+
+    .products-h2 {
+        color: var(--dark) !important;
+    }
+
+    .products-span {
+        color: var(--primary) !important;
+        opacity: 0.6;
+    }
+
+    .fixed-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: blue;
+        color: white;
+        border: 0;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .light-btn{
+        border:1px solid var(--primary);
+        transition: all 0.4s;
+    }
+
+    .all-pg-btn {
+        display: none;
+    }
+
+
+</style>
+
+<!-- ***** Main Banner Area Start ***** -->
+<div class="page-heading" id="top" style=" background-image: url(../Content/Images/products-page-heading.jpg);">
+    <div class="container d-none">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="inner-content">
+                    <h2>Check Our Products</h2>
+                    <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** Main Banner Area End ***** -->
+<!-- ***** Products Area Starts ***** -->
+<section class="section" id="products">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2 class="products-h2">@catname.Name</h2>
+                    <span class="products-span">@catname.Description</span>
+                </div>
+                <hr>
+                <div class="decor-gallery">
+                    <div class="row">
+                        @if (Model.ProductImages.Count() != 0 )
+                        {
+                            foreach (var item in Model.ProductImages)
+                            {
+                                <div class="col-lg-4 col-6">
+                                    <img class="w-100 mb-3" onclick="ImageClick('@item.Image')" src="@item.Image" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <h2 class="text-center">Comming Soon</h2>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="myModal" class="modal fade" role="dialog">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<a href="https://wa.me/919967060009?text=hey%0aI came across the Decor page on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect?" target="_blank" class="fixed-button light-btn"><i class="bi bi-whatsapp"></i> For Decor Enquiry and Orders</a>
+
+<script>
+    function ImageClick(i) {
+        $(".modal-body").html("<img src='" + i + "' class='modal-img mod-ful'>");
+        $("#myModal").modal("show");
+    }
+</script>

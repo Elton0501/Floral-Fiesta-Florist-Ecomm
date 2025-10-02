@@ -50,6 +50,11 @@ namespace Entities
         [NotMapped]
         public int? cartId { get; set; }
         [NotMapped]
-        public int? BestSellerCount { get; set; }
+        public int? BestSellerCount { get; set; }      
+        [NotMapped]
+        public string SubCategoryName { get; set; }
+        [NotMapped]
+        public string CreatedOnString { get; set; }
+
     }
 }

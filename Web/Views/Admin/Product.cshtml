@@ -1,4 +1,4 @@
-﻿@model List<Entities.Product>
+﻿@*@model List<Entities.Product>*@
 @{
     ViewBag.Title = "WebsiteInformation";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -6,6 +6,43 @@
 }
 
 <style>
+    #ProductTable_filter input {
+        width: 370px;
+    }
+    /* Remove default DataTables arrows */
+    table.dataTable thead .sorting::after,
+    table.dataTable thead .sorting_asc::after,
+    table.dataTable thead .sorting_desc::after {
+        content: "";
+    }
+
+    /* Ascending arrow (▲) */
+    table.dataTable thead .sorting_asc::after {
+        content: "▲"; /* Unicode up arrow */
+        display: inline-block;
+        margin-left: 5px;
+        font-size: 0.7em;
+        color: #ffffff;
+    }
+
+    /* Descending arrow (▼) */
+    table.dataTable thead .sorting_desc::after {
+        content: "▼"; /* Unicode down arrow */
+        display: inline-block;
+        margin-left: 5px;
+        font-size: 0.7em;
+        color: #ffffff;
+    }
+
+    /* Not sorted (optional: small triangle) */
+    table.dataTable thead .sorting::after {
+        content: "▾";
+        display: inline-block;
+        margin-left: 5px;
+        font-size: 0.7em;
+        color: #ffffff;
+    }
+
     select {
         -webkit-appearance: listbox !important
     }
@@ -90,12 +127,21 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <div>
-                    <h6 class="m-0 font-weight-bold text-primary text-uppercase">Products - <span style="color: var(--success);"></span></h6>
+                    <h6 class="m-0 font-weight-bold text-primary text-uppercase">Products - <span id="totalFilteredCount" style="color: var(--success);"></span></h6>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-primary" id="add-product" data-toggle="collapse" data-target="#filter-panel">
-                        <span class="glyphicon glyphicon-cog"></span> Add Product
-                    </button>
+                <div class="d-flex gap-3">
+                    <div>
+                        <button type="button" class="btn btn-primary" id="add-product" data-toggle="collapse" data-target="#filter-panel">
+                            <span class="glyphicon glyphicon-cog"></span> Add Product
+                        </button>
+                    </div>
+                    <div>
+                        <select class="form-control shadow-sm bg-light" aria-label="Select Filter" id="filterType">
+                            <option value="1" selected="">Active</option>
+                            <option value="0">In Active</option>
+                            <option value="2">Select All</option>
+                        </select>
+                    </div>
                 </div>
 
             </div>
@@ -117,54 +163,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
-                        {
-                            Count = Count + 1;
-                            <tr>
-                                <td>@Count</td>
-                                <td>@item.Name</td>
-                                <td>@item.imgdefault</td>
-                                <td>@item.SubCategory.Name</td>
-                                <td>@item.CreatedOn</td>
-                                <td>
-                                    @if (item.Isfeatured == true)
-                                    {
-                                        <i style="font-size:1rem" class="bi bi-hand-thumbs-up"></i>
-                                    }
-                                    else
-                                    {
-                                        <i style="font-size:1rem" class="bi bi-hand-thumbs-down"></i>
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.isWhatsapp == true)
-                                    {
-                                        <i style="font-size:1rem" class="bi bi-whatsapp"></i>
-                                    }
-                                    else
-                                    {
-                                        <i style="font-size:1rem" class="bi bi-bag"></i>
-                                    }
-                                </td>
-                                <td>@item.SeoTags</td>
-                                <td>
-                                    <div class="form-check form-check-inline">
-                                        @{
-                                            var trueCheckedStatus = item.Status == true ? "Checked" : string.Empty;
-                                        }
-                                        <input type="hidden" name="Status" value='@item.Status' id="chkstatus" title="Status" />
-                                        <input class="form-check-input status-cb" data-id="@item.Id" id="chkstatus" type="checkbox" @trueCheckedStatus>
-                                    </div>
-                                </td>
-                                <td>@item.Rating</td>
-                                <td>
-                                    <div class="row">
-                                        <div class="button-act"><button class="editbtn btn btn-default btn-outline-dark" type="button" data-id="@item.Id" title="Edit"><i class="bi bi-pencil-square"></i></button></div>
-                                        <div style="display:none" class="button-act"><button class="deletebtn btn btn-default btn-outline-danger" type="button" data-id="@item.Id" title="Delete"><i class="bi bi-trash"></i></button></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
                     </tbody>
                 </table>
             </div>
@@ -174,26 +172,236 @@
 
 <script>
     $(document).ready(function () {
-        $("#ProductTable").DataTable();
+        //$("#ProductTable").DataTable();
         $("#product-add-container").hide();
     });
+    //--------------Data Table----------------NEW//
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterType = document.getElementById("filterType");
+        filterTypeId = 1;
+        let table = initializeDataTable(1);
+        function initializeDataTable(d) {
+            return $('#ProductTable').DataTable({
+                ajax: {
+                    url: '/Admin/ProductList',
+                    type: 'POST',
+                    data: { dropdownId: filterTypeId },
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1; // gives 1,2,3,... for each row
+                        }
+                    },
+                    { data: 'Name', orderable: true },
+                    {
+                        data: 'DefaultImage',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            if (data) {
+                                return '<img src="' + data + '" alt="Banner Image" style="height: 60px;" />';
+                            }
+                            return '';
+                        }
+                    },
+                    { data: 'SubCategoryName', orderable: false },
+                    { data: 'CreatedOnString', orderable: true },
+                    {
+                        data: 'Isfeatured',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            if (data === true) {
+                                return '<i style="font-size:1rem" class="bi bi-hand-thumbs-up"></i>';
+                            } else {
+                                return '<i style="font-size:1rem" class="bi bi-hand-thumbs-down"></i>';
+                            }
+                        }
+                    },
+                    {
+                        data: 'isWhatsapp',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            if (data === true) {
+                                return '<i style="font-size:1rem" class="bi bi-whatsapp"></i>';
+                            } else {
+                                return '<i style="font-size:1rem" class="bi bi-bag"></i>';
+                            }
+                        }
+                    },
+                    { data: 'SeoTags', orderable: false },
+                    {
+                        class: 'handleButtonActions', // Changed from separate classes
+                        data: 'Id',
+                        orderable: false,
+                        render: function (data, type, row, meta) {
 
-    function focusAction() {
-        $('html, body').animate({
-            scrollTop: $("#product-add-container").offset().top - 100
-        }, 1000);
-    }
+                            // Status icon with specific class for click handling
+                            const statusIcon = `<span class="status-action-handle" data-id="${row.Id}" data-status="${row.Status}" title="Click to change status">
+                        ${row.Status ? `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-checkbox" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#00b341" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M9 11l3 3l8 -8" />
+                                <path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+                            </svg>
+                        ` : `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-square-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+                                <path d="M9 9l6 6m0 -6l-6 6" />
+                            </svg>
+                        `}
+                    </span>`;
 
+                            return `<div >
+                        ${statusIcon}
+                    </div>`;
+                        }
+                    },
+                    { data: 'Rating', orderable: true },
+                    {
+                        class: 'handleButtonEditActions',
+                        data: 'Id',
+                        orderable: false,
+                        render: function (data, type, row, meta) {
+                            // Edit button (as a button element with data-id)
+                            const editButton = `
+            <button type="button" class="btn btn-sm  editbtn" data-id="${row.Id}" title="Edit">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-pencil"
+                     width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000"
+                     fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                    <path d="M10 18l5 -5a1.414 1.414 0 0 0 -2 -2l-5 5v2h2z" />
+                </svg>
+            </button>`;
+                            return `<div>${editButton}</div>`;
+                        }
+                    }
+                ],
+                order: [[0, 'desc']],
+                processing: true,
+                serverSide: true,
+                stateSave: true,
+
+            });
+
+        }
+        table.on('click', 'td.handleButtonActions .status-action-handle', function (event) {
+            event.stopPropagation(); // Prevent event bubbling
+
+            const icon = $(this);
+            const id = icon.data('id');
+            const currentStatus = icon.data('status') === true; // Ensure boolean
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to update the status?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/ProductStatus',
+                        type: 'POST',
+                        data: {
+                            status: currentStatus,
+                            proId: id
+                        },
+                        success: function (response) {
+                            if (response == true) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: 'Successfully Change the status!',
+                                    confirmButtonText: 'OK',
+                                }).then(() => {
+                                    window.location.reload(); // Reload the page to reflect changes
+                                });
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Something went wrong!',
+                                })
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Error updating status: ' + error,
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        // bind xhr event
+        table.on('xhr.dt', function (e, settings, json, xhr) {
+            // json.recordsFiltered comes from your server
+            $("#totalFilteredCount").text(json.recordsFiltered);
+        });
+        $(document).on("click", ".editbtn", function () {
+            $("#product-add-container").show();
+        
+            $.ajax({
+                url: '@Url.Action("ProductEdit", "Admin")',
+                data: { id: $(this).data("id") }
+            })
+            .done(function (response) {
+                $("#product-add-container").html(response);
+        
+                // 🔽 Scroll to the container after content is loaded
+                $('html, body').animate({
+                    scrollTop: $("#product-add-container").offset().top
+                }, 500); // 500ms animation
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                $('.loadermodel').hide();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!'
+                });
+            });
+        });
+        if (filterType) {
+            filterType.addEventListener("change", function () {
+
+                filterTypeId = this.value;
+                // Clear the saved state
+                if (table.state) {
+                    table.state.clear();
+                }
+                table.destroy();
+                table = initializeDataTable(filterTypeId);
+                if (filterTypeId == 1 || filterTypeId == 2) {
+                    table.columns().visible(true);
+                }
+            });
+        }
+
+        $("#ProductTable_filter input").attr("placeholder", "Search Product by Name and Category Name");
+
+    });
+
+    //--------------End Data Table----------------//
 
     $("#add-product").click(function () {
-        focusAction();
         $("#product-add-container").show();
         $.ajax({
             url: '@Url.Action("ProductAdd", "Admin")',
         })
             .done(function (response) {
                 $("#product-add-container").html(response);
-                $("html,#messages").animate({ scrollTop: $('#product-add-container').prop("scrollHeight")}, "slow");
         })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                 Swal.fire({
@@ -203,9 +411,7 @@
                 })
         });
     });
-
     //--------------Edit-btn--------------------//
-
     $(".editbtn").click(function() {
         $("#product-add-container").show();
         $.ajax({
@@ -226,17 +432,10 @@
             })
         });
     });
-
     //------------//--Edit-btn--//------------------//
-
     //--------------Delete-btn--------------------//
-
-    
-
     //------------//--Delete-btn--//------------------//
-
     //--------------Status-chechbox--------------------//
-
     $('.status-cb').change(function () {
         if ($(this).prop("checked") == true) {
             Swal.fire({
@@ -350,10 +549,125 @@
         }
 
     });
-
     //------------//--Status-chechbox--//------------------//
 
-
-
-
 </script>
+
+
+
+@*//{ data: 'Type', orderable: false },
+                        //{ data: 'ScreenType', orderable: false },
+                        //{ data: 'DisplayOrder', orderable: true },
+                        //{
+                        //    data: 'Image',
+                        //    orderable: false,
+                        //    render: function (data, type, row) {
+                        //        if (data) {
+                        //            return '
+    <img src="' + data + '" alt="Banner Image" style="height: 60px;" />';
+                        //        }
+                        //        return '';
+                        //    }
+                        //},
+                        //{ data: 'CreatedOnString', orderable: true },*@
+
+@*<tbody>
+          @foreach (var item in Model)
+          {
+              Count = Count + 1;
+              <tr>
+                  <td>@Count</td>
+                  <td>@item.Name</td>
+                  <td><img src="@item.imgdefault" style="width:40%;"/></td>
+                  <td>@item.SubCategory.Name</td>
+                  <td>@item.CreatedOn</td>
+                  <td>
+                      @if (item.Isfeatured == true)
+                      {
+                          <i style="font-size:1rem" class="bi bi-hand-thumbs-up"></i>
+                      }
+                      else
+                      {
+                          <i style="font-size:1rem" class="bi bi-hand-thumbs-down"></i>
+                      }
+                  </td>
+                  <td>
+                      @if (item.isWhatsapp == true)
+                      {
+                          <i style="font-size:1rem" class="bi bi-whatsapp"></i>
+                      }
+                      else
+                      {
+                          <i style="font-size:1rem" class="bi bi-bag"></i>
+                      }
+                  </td>
+                  <td>@item.SeoTags</td>
+                  <td>
+                      <div class="form-check form-check-inline">
+                          @{
+                              var trueCheckedStatus = item.Status == true ? "Checked" : string.Empty;
+                          }
+                          <input type="hidden" name="Status" value='@item.Status' id="chkstatus" title="Status" />
+                          <input class="form-check-input status-cb" data-id="@item.Id" id="chkstatus" type="checkbox" @trueCheckedStatus>
+                      </div>
+                  </td>
+                  <td>@item.Rating</td>
+                  <td>
+                      <div class="row">
+                          <div class="button-act"><button class="editbtn btn btn-default btn-outline-dark" type="button" data-id="@item.Id" title="Edit"><i class="bi bi-pencil-square"></i></button></div>
+                          <div style="display:none" class="button-act"><button class="deletebtn btn btn-default btn-outline-danger" type="button" data-id="@item.Id" title="Delete"><i class="bi bi-trash"></i></button></div>
+                      </div>
+                  </td>
+              </tr>
+          }
+      </tbody>
+
+
+
+
+
+
+
+
+
+        //            {
+    //                class: 'handleButtonActions', // Changed from separate classes
+    //                data: 'Id',
+    //                orderable: false,
+    //                render: function (data, type, row, meta) {
+    //                    // Edit button (unchanged)
+    //                    const editButton = `<a href="/Admin/BannerAction?Id=${row.Id}" title="Edit" class="btn bg-transparent text-primary border-0 moreInfo handleBtn p-0 me-2">
+    //    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-pencil" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    //        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    //        <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+    //        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+    //        <path d="M10 18l5 -5a1.414 1.414 0 0 0 -2 -2l-5 5v2h2z" />
+    //    </svg>
+    //</a>`;
+
+    //                    // Status icon with specific class for click handling
+    //                    const statusIcon = `<span class="status-action-handle" data-id="${row.Id}" data-status="${row.Status}" title="Click to change status">
+    //    ${row.Status ? `
+    //        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-checkbox" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#00b341" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    //            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    //            <path d="M9 11l3 3l8 -8" />
+    //            <path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+    //        </svg>
+    //    ` : `
+    //        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-square-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff2825" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    //            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    //            <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+    //            <path d="M9 9l6 6m0 -6l-6 6" />
+    //        </svg>
+    //    `}
+    //</span>`;
+
+    //                    return `<div class="d-flex align-items-center" style="gap: 8px;">
+    //    ${editButton}
+    //    ${statusIcon}
+    //</div>`;
+    //                }
+    //            },*@
+
+
+

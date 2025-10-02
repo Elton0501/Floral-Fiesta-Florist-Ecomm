@@ -1,4 +1,4 @@
-﻿@model DataModels.OrderDetailsViewModel
+@model DataModels.OrderDetailsViewModel
 <style>
     .Itemdiv {
          border: 1px solid #f1f1f1; 
@@ -152,7 +152,7 @@
                                 @Html.DisplayFor(model => model.Order.TotalAmount)
                             </small>
                         </div>
-                        <div class="col-md-3 col-6">
+						<div class="col-md-3 col-6">
                             <label>
                                 Tracking Id
                             </label>
@@ -179,7 +179,6 @@
                                 @Html.DisplayFor(model => model.Order.ShippingAddress)
                             </small>
                         </div>
-
                     </div>
                 </div>
                 <div class="mt-3 Itemdiv">
@@ -194,7 +193,7 @@
                                 <th>
                                     Item Name
                                 </th>
-                                <th>
+								<th>
                                     User Note
                                 </th>
                                 <th>
@@ -222,7 +221,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
-                        <td>
+						 <td>
                             @Html.DisplayFor(modelItem => item.IDesc)
                         </td>
                         <td>

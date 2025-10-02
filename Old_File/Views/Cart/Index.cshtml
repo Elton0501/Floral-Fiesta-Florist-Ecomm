@@ -1,0 +1,445 @@
+﻿@model DataModels.CartView
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int count = 0;
+}
+
+<style>
+    .order-item {
+        padding: 1rem 0;
+    }
+
+    span::after {
+        padding-left: 5px;
+    }
+
+    .error{
+        color: red !important;
+    }
+
+    input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: #fff;
+        border-color: #6b7280;
+        border-width: 1px;
+        border-radius: 0;
+        padding-top: .5rem;
+        padding-right: .75rem;
+        padding-bottom: .5rem;
+        padding-left: .75rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    .gr{
+        color: var(--primary);`
+    }
+
+    .d-date {
+        border-color: var(--primary);
+        color: var(--primary);
+        border-radius: 10px;
+    }
+
+        input:invalid + span::after {
+            content: '✖';
+            color: #DC2626;
+        }
+
+        input:valid + span::after {
+            content: '✓';
+            color: #22C55E;
+        }
+
+    .cart-container {
+        margin-top: 160px;
+    }
+
+    .p-desc {
+        color: #8d8b8b;
+    }
+
+    .item-img img {
+        width: 100%;
+        height: fit-content;
+    }
+
+    .item-info h5{
+        color:var(--dark);
+    }
+
+    .item-price {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+    }
+
+    .item-price h6 {
+        text-align: right;
+        margin-right: 1rem;
+        color:var(--primary);
+    }
+
+    .qty-container {
+        display: flex;
+        align-items: center;
+        margin-top: 0.7rem;
+    }
+
+        .qty-container .input-qty {
+            text-align: center;
+            padding: 2px 3px;
+            border: 1px solid #d4d4d4;
+            max-width: 37px;
+        }
+
+        .qty-container .qty-btn-minus,
+        .qty-container .qty-btn-plus {
+            border: 1px solid #d4d4d4;
+            padding: 0px 0px;
+            font-size: 20px;
+            height: 30px;
+            width: 30px;
+            transition: 0.3s;
+        }
+
+        .qty-container .qty-btn-plus {
+            margin-left: -1px;
+        }
+
+        .qty-container .qty-btn-minus {
+            margin-right: -1px;
+        }
+
+        .selected{
+            background-color: var(--primary) !important;
+            color:var(--text) !important;
+        }
+
+    .rem-btn:focus {
+        outline: 0;
+        box-shadow: none !important;
+    }
+
+    .theme-btn {
+        color: var(--primary) !important;
+        border-color: var(--primary) !important;
+        background-color: var(--text) !important;
+        cursor: pointer;
+        padding: 0.5rem;
+        margin-top: 1rem;
+    }
+
+        .theme-btn:hover {
+            color: var(--text) !important;
+            border-color: var(--text) !important;
+            background-color: var(--primary) !important;
+        }
+
+    .btn-cornered,
+    .input-cornered {
+        border-radius: 4px;
+    }
+
+    @@media(max-width: 500px){
+        .item-img img {
+            width: 50% !important;
+            height: fit-content;
+        }
+    }
+</style>
+
+<div class="container cart-container">
+    <h3 style="color:var(--dark);"><i class="bi bi-bag"></i>  Shopping Bag</h3>
+    <hr />
+    @if (Model.Carts.Count() > 0)
+    {
+        foreach (var item in Model.Carts)
+        {
+            count = count + 1;
+            <div class="order-item ml-md-5 mr-md-5" id="@("RowId-" + item.Id)">
+                <div class="row">
+                    <div class="item-img col-lg-4 col-md-4 col-12 mb-2">
+                        <img src="@item.Product.DefaultImage" />
+                    </div>
+                    <div class="item-info pl-3 col-lg-8 col-md-8 col-12">
+                        <div class="d-flex justify-content-between">
+                            <div class="pro-info">
+                                <h5>@item.Product.Name</h5>
+                                <div class="qty-container">
+                                    <button class="qty-btn-minus btn-light" type="button" data-id="@item.Id"><i class="bi bi-dash"></i></button>
+                                    <input type="number" id="@item.Id" onchange="cartQuantity('@item.Id')" step="1" min="1" max="" name="qty" value="@item.Quantity" class="input-qty" size="4" pattern="" inputmode="" />
+                                    <button class="qty-btn-plus btn-light" type="button" data-id="@item.Id"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="item-price">
+                                <h6>Rs. <label class="@(item.Id +"itemDisPrice")">@(item.Product.DiscountPrice > 0 ? item.Product.DiscountPrice : item.Product.Price)</label></h6>
+                                <h6 class="text-danger" @(item.Product.DiscountPrice > 0 ? "" : "hidden")>Rs. <label style="text-decoration:line-through" class="@(item.Id +"itemPrice")">@item.Product.Price</label></h6>
+                                <button style="color: #dc3545; text-decoration: underline;" class="btn rem-btn mt-2 mr-2" onclick="RemoveCart('@item.Id')">Remove</button>
+                            </div>
+                        </div>
+                        <div id="@("ShipmentSlot" + item.Id)">
+                            <small id="@("dmsg" + count)" class="mt-2 gr">Please put your required delivery date and time slot</small><br />
+                            <h6 id="@("slotCount" + count)" hidden></h6>
+                            <input id="@count" class="d-date mt-1 mb-3 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md" type="date" data-id="@item.Id" required pattern="\d{4}-\d{2}-\d{2}" placeholder="#### / ## / ##">
+                            <div class="slotBox" id="@("slotBox" + item.Id)">
+
+                            </div>
+                            
+                        </div>
+                        <div id="@("descr" + item.Id)">
+                            <label class="mt-3">What occassion do you want this for?</label><small id="@("ddesc" + count)"></small><br />
+                            <textarea id="@("dtb" + count)" placeholder="This will help us curate it better" rows="3" cols="40" class="cart-item-desc p-2" data-id="@item.Id">@item.Description</textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+                
+            </div>
+        }
+
+        <div class="ml-md-5 mr-md-5 text-right TotalBillSec">
+            <hr />
+            <div class="item-price col-12">
+                <h6>
+                    Total: Rs. <label id="NewTotalPrice">@Model.TotalAmount</label>
+                    <label class="text-danger @(Model.TotalAmount == Model.TotalwithoutDisc ? "d-none":"")" style="text-decoration-line: line-through;" id="TotalWithoutDiscount">@Model.TotalwithoutDisc</label>
+                </h6>
+                <button style="transition: all 0.4s" id="chk-btn" class="btn mr-2 theme-btn">Proceed to Checkout <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+    }
+    <div id="emptyCart" class="d-none">
+        <p>Cart is empty.</p>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var totalItemCount = @Model.Carts.Count();
+        if (totalItemCount == 0) {
+            $("#emptyCart").removeClass("d-none");
+        }
+    });
+    function RemoveCart(id) {
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("RemoveInCart", "Cart")',
+                data: {
+                    CartItemId: id,
+                    homePage: false,
+                },
+                success: function (response) {
+                   if (response.Result == true)
+                   {
+                       $("#RowId-" + id).hide();
+                       $("#NewTotalPrice").html("&#8377" + " " + Math.round(response.TotalAmount));
+                       if (response.TotalAmount != response.TotalwithoutDisc) {
+                           $("#TotalWithoutDiscount").html("&#8377" + " " + Math.round(response.TotalwithoutDisc));
+                       }
+                       else {
+                           $("#TotalWithoutDiscount").hide();
+                       }
+                       if (response.TotalAmount == 0) {
+                           $("#emptyCart").removeClass('d-none');
+                           $(".TotalBillSec").hide();
+                       }
+                       $("#cart-quantity").html(response.Count);
+                   }
+                   else {
+                       alert("Sorry! Something Went Wrong");
+                   }
+                },
+                 error: function () {
+                     alert("Sorry! Something Went Wrong");
+                }
+            })
+        }
+    }
+    function cartQuantity(id) {
+        var count = document.getElementById(id).value;
+        $.ajax({
+            type:"POST",
+            url: '@Url.Action("CartQuantity","Cart")',
+            data: {
+                CartItemId: id,
+                CartQuantity: count
+            },
+            success: function (result) {
+                $("#NewTotalPrice").html();
+                $("#cart-quantity").html();
+                $("#NewTotalPrice").html("&#8377" + " " + Math.round(result.TotalAmount).toFixed(2));
+                $("#cart-quantity").html(result.cartQuant);
+                if (result.TotalAmount != result.TotalwithoutDisc) {
+                    $("#TotalWithoutDiscount").html("&#8377" + " " + Math.round(result.totalWithoutDiscount).toFixed(2));
+                }
+                $("." + id + "itemPrice").html(Math.round(result.itemDisPrice).toFixed(2));
+                $("." + id + "itemDisPrice").html(Math.round(result.itemPrice).toFixed(2));
+            },
+             error: function () {
+                alert("Something Went Wrong");
+            }
+        })
+    }
+
+    var buttonPlus = $(".qty-btn-plus");
+    var buttonMinus = $(".qty-btn-minus");
+
+    var incrementPlus = buttonPlus.click(function () {
+        var $n = $(this)
+            .parent(".qty-container")
+            .find(".input-qty");
+        $n.val(Number($n.val()) + 1);
+        var id = $(this).attr("data-id");
+        cartQuantity(id);
+    });
+
+    var incrementMinus = buttonMinus.click(function () {
+        var $n = $(this)
+            .parent(".qty-container")
+            .find(".input-qty");
+        var amount = Number($n.val());
+        if (amount > 1) {
+            $n.val(amount - 1);
+            var id = $(this).attr("data-id");
+            cartQuantity(id);
+        }
+    });
+
+    $(".cart-item-desc").change(function () {
+        var cid = $(this).attr("data-id");
+        $.ajax({
+            type:"POST",
+             url: '@Url.Action("saveCartDesc", "Cart")',
+            data: {
+                msg: $(this).val(),
+                Id: cid,
+            },
+            success: function (response) {
+                if (response != "true") {
+                    alert("Something Went Wrong");
+                }
+                else {
+                    $("#descr" + cid).find("small").html("");
+                }
+            },
+             error: function () {
+                alert("Something Went Wrong");
+            }
+        })
+    });
+
+    $(".d-date").change(function () {
+        var id = $(this).attr("data-id");
+         $.ajax({
+            type:"POST",
+             url: '@Url.Action("getSelectSlot", "Cart")',
+             dataType: 'json',
+            data: {
+                date: $(this).val(),
+                Id: id,
+            },
+             success: function (response) {
+                 var returnedData = JSON.parse(response);
+                 if (returnedData.result == true) {
+                     $("#slotBox" + id).html("");
+                     jQuery.each(returnedData.slot, function (index, item) {
+                         var variable = '' +
+                             '<button class="btn light-btn d-time mr-2 mb-2 ' + item.Name + '" onclick="SlotSave(\'' + item.Name + '\',\'' + id + '\' )" id="' + returnedData.PId + "slot" + item.Name + '">' + item.Description + '</button>' +
+                             '';
+                         $("#slotBox" + id).append(variable);
+                         $("#ShipmentSlot" + id).find("small").html("Select Delivery Slot for this date");
+                         $("#ShipmentSlot" + id).find("small").addClass('gr');
+                         $("#ShipmentSlot" + id).find("small").removeClass('error');
+                     });
+                 }
+                 else {
+                     $("#slotBox" + id).html("");
+                     $("#ShipmentSlot" + id).find("input").val("");
+                     $("#ShipmentSlot" + id).find("h6").html("");
+                     $("#ShipmentSlot" + id).find("small").html("No Slots for this date.");
+                     $("#ShipmentSlot" + id).find("small").addClass('error');
+                     $("#ShipmentSlot" + id).find("small").removeClass('gr');
+
+                 }
+
+            },
+             error: function () {
+                alert("Something Went Wrong");
+            }
+        })
+    });
+
+    $("#chk-btn").click(function () {
+        var count = '@Model.Carts.Count()';
+        var emptyCount = "0";
+        var slotEmptyCount = "0";
+        var cdesccount = "0";
+        if (count > 0) {
+            for (var i = 1; i <= count; i++) {
+                var dateinp = $("#" + i).val();
+                if (dateinp == null || dateinp == "") {
+                    $("#dmsg" + i).addClass('error');
+                    $("#dmsg" + i).removeClass('gr');
+                    emptyCount = "1";
+                }
+            }
+            for (var i = 1; i <= count; i++) {
+                var slot = $("#slotCount" + i).html();
+                if (slot == null || slot == "") {
+                    $("#dmg" + i).html("Please select a slot for delivery*");
+                    $("#dmsg" + i).addClass('error');
+                    $("#dmsg" + i).removeClass('gr');
+                    slotEmptyCount = "1";
+                }
+            }
+            for (var i = 1; i <= count; i++) {
+                var descr = $("#dtb" + i).val();
+                if (descr == null || descr == "") {
+                    $("#ddesc" + i).html(" Required*");
+                    $("#ddesc" + i).addClass('error');
+                    $("#ddesc" + i).removeClass('gr');
+                    cdesccount = "1";
+                }
+            }
+        }
+        if (emptyCount == "0" && slotEmptyCount == "0" && cdesccount== "0") {
+            var url = "/Checkout/Address";
+            window.location.href = url;
+        }
+    });
+
+    function SlotSave(slot, id) {
+        var Date = $("#ShipmentSlot" + id).find("input").val();
+         $.ajax({
+            type:"POST",
+             url: '@Url.Action("SaveSlot", "Cart")',
+            data: {
+                cartId : id,
+                date: Date,
+                Slot: slot,
+            },
+             success: function (response) {
+                 if (response == "true") {
+                     $("#ShipmentSlot" + id).find("button").removeClass('selected');
+                     $("#slotBox" + id).find("." + slot).addClass('selected');
+                     $("#ShipmentSlot" + id).find("small").html("Slot selected ");
+                     $("#ShipmentSlot" + id).find("small").addClass('gr');
+                     $("#ShipmentSlot" + id).find("small").removeClass('error');
+                     $("#ShipmentSlot" + id).find("h6").html(slot);
+
+                 }
+
+            },
+             error: function () {
+                alert("Something Went Wrong");
+            }
+        })
+    }
+
+
+</script>

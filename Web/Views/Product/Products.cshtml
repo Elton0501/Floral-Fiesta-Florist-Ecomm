@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<Entities.SubCategory>
 @{
-
     var dataId = Convert.ToInt32(TempData["CatId"]);
     var catname = CategoryService.Instance.Category(dataId);
     ViewBag.Title = catname.Name;
@@ -50,7 +49,6 @@
         border-radius: 63px;
         color: var(--text);
     }
-
 
     .productlist input[type=search] {
         padding: 8.5px 25px !important;
@@ -219,7 +217,7 @@
         var proCatId = '@dataId';
         var subCatId = $("#subCatId").val();
         var searchtxt = $("#searchtxt").val();
-        loadProducts(proCatId, searchtxt, subCatId);        
+        loadProducts(proCatId, searchtxt, subCatId);
     });
     $("#search").click(function () {
         var proCatId = '@dataId';
@@ -228,7 +226,6 @@
         if (search.length > 0) {
             loadProducts(proCatId, search, subCatId);
         }
-
     });
     function subCatTab(id, catId) {
         $("#subCatId").val(id);
@@ -245,13 +242,12 @@
             },
             success: function (response) {
                 $("#ProductsView").html(response);
-                bg();
+				bg();
             },
             error: function (response) {
                 alert("Something went wrong");
             }
         });
-
     }
     $("#tile-1 .nav-tabs a").click(function () {
         var position = $(this).parent().position();

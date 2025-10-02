@@ -1,0 +1,138 @@
+﻿@model Entities.SubCategory
+@{
+    var menuCat = ViewBag.CatItem;
+}
+
+<style>
+    .img-pro-box {
+        width: 17%;
+        margin: 1rem;
+        border-radius: 10px;
+    }
+
+    .error {
+        font-size: 1rem;
+        width: 100%;
+    }
+</style>
+
+
+
+<div class="adminpage-head">
+    <div class="card shadow mb-4">
+        <div class="form-horizontal">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4>Add SubCategory</h4>
+            </div>
+            <hr />
+
+            <div class="card-body">
+                <form id="subcatcreate">
+                    <input name="Id" value="@Model.Id" hidden/>
+                    <input name="Status" value="@Model.Status" hidden/>
+                    <input name="Create" value="@Model.Create" hidden/>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-10" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CatItem, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">SubCategory Name</label><br />
+                            <input class="form-control" name="Name" value="@Model.Name" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <div class="form-group">
+                            <label class="control-label">SubCategory Description</label><br />
+                            <input class="form-control" name="Description" value="@Model.Description" required />
+                        </div>
+                    </div>
+
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button class="btn btn-default btn-outline-primary" id="SubCatEditBtn">Edit</button>
+                            </div>
+                        </div>
+                        <div class="form-group ml-3">
+                            <div class="">
+                                <a id="subcatbox-close" class="btn btn-default btn-outline-danger">Close</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+    });
+
+    $('#subcatcreate').validate({
+        rules: {
+            Name: {
+                required: true,
+            },
+            Description: {
+                required: true,
+            },
+        },
+        messages: {
+            Name: {
+                required: '* Subcategory Name is required',
+            },
+            Description: {
+                required: '* Subcategory Description is required',
+            },
+        }
+    });
+
+    $("#SubCatEditBtn").click(function (e) {
+        e.preventDefault();
+        if ($("#subcatcreate").valid()) {
+            $.ajax({
+                type:'Post',
+                url: '@Url.Action("SubCategoryEdit", "Admin")',
+                data: $("#subcatcreate").serialize(),
+            })
+                .done(function (response) {
+                    if (response == "true") {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Subcategory edited Successfully',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    setTimeout(function () {// wait for 5 secs(2)
+                        window.location.reload(); // then reload the page.(3)
+                    }, 1550);
+                    }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+            });
+        }
+    });
+
+    $("#subcatbox-close").click(function () {
+        $("#subcategory-add-container").hide();
+
+    });
+</script>
+

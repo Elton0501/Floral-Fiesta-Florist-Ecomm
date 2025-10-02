@@ -1,0 +1,247 @@
+﻿@model DataModels.OrderDetailsViewModel
+<style>
+    .Itemdiv {
+         border: 1px solid #f1f1f1; 
+         border-radius: 5px; 
+         padding: 1rem; 
+    }
+    .OrderDetails label {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #5c5c5c;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+    .OrderDetails .col-md-3, .OrderDetails .col-6 {
+        margin-bottom: 10px;
+    }
+    h6{
+        font-weight: 700;
+        text-transform: uppercase;
+        color: blue;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+</style>
+<div class="product-table">
+    <div class="adminpage-head">
+        <div class="card mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary text-uppercase">Order No - <span style="color: var(--success);">@Model.Order.OrderId</span></h6>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card-body table-responsive">
+                <div class="Itemdiv OrderDetails">
+                    <h6>Order Details</h6>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Billing User
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.User.Name)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Billing User Number
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.User.MobileNumber)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Billing Date
+                            </label>
+                            <br />
+                            <small>@Model.Order.CreatedOn.ToString("MMMM-dd-yyyyy")</small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Billing Time
+                            </label>
+                            <br />
+                            <small>@Model.Order.CreatedOn.ToString("h:m tt")</small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Receiver Name
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.ReceiverName)
+                            </small>
+
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Receiver Contact
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.ReceiverMobileNumber)
+                            </small>
+
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Receiver Email
+                            </label>
+                            <small>
+                                @Html.DisplayFor(model => model.Order.ReceiverEmail)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Payment Method
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.PaymentTypeString)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Payment Status
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.PaymentStatusString)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Order Status
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.OrderStatusString)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Amount
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.BillAmount)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Delivery Charges
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.DeliveryCharges)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Total Amount
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.TotalAmount)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Tracking Id
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.rzp_orderid)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Bank Ref No.
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.razorpayKey)
+                            </small>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label>
+                                Shipping Address
+                            </label>
+                            <br />
+                            <small>
+                                @Html.DisplayFor(model => model.Order.ShippingAddress)
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="mt-3 Itemdiv">
+                    <h6>Order Items</h6>
+                    <hr />
+                    <table class="product-table table table-bordered" id="OrderViewTable" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>
+                                    Item Id
+                                </th>
+                                <th>
+                                    Item Name
+                                </th>
+                                <th>
+                                    User Note
+                                </th>
+                                <th>
+                                    Item Price
+                                </th>
+                                <th>
+                                    Quantity
+                                </th>
+                                <th>
+                                    Delivery Date
+                                </th>
+                                <th>
+                                    Delivery Time
+                                </th>
+
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            var slotname = OrdersService.Instance.SlotTime(item.SlotId);
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ItemId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IDesc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DDate)
+                        </td>
+                        <td>
+                            @slotname
+                        </td>
+                    </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

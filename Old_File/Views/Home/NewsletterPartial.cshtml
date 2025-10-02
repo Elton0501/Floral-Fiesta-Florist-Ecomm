@@ -1,0 +1,55 @@
+﻿<div class="subscribe">
+    <div class="container">
+        <div class="section-heading">
+            <h2>By Subscribing To Our Newsletter You Can Get 30% Off</h2>
+            <span>Details to details is what makes Hexashop different from the other themes.</span>
+            <br />
+            <span class="errorsubscribe"></span>
+        </div>
+        <form id="subscribe">
+            <div class="row">
+                <div class="col-lg-5">
+                    <fieldset>
+                        <input name="Name" type="text" id="name" placeholder="Your Name" value="" required>
+                    </fieldset>
+                </div>
+                <div class="col-lg-5">
+                    <fieldset>
+                        <input name="Email" type="text" id="email" pattern="" placeholder="Your Email Address" value="" required>
+                    </fieldset>
+                </div>
+                <div class="col-lg-2">
+                    <fieldset>
+                        <button type="submit" id="subscribeBtn" class="primary-btn"><i class="bi bi-send"></i></button>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- ***** Subscribe Area Ends ***** -->
+<script>$("#subscribeBtn").click(function () {
+        $("#subscribeBtn").prop('disabled', true);
+        $.ajax({
+            type: 'POST',
+            url: '/Home/AddsubscribeForm',
+            data: $("#subscribe").serialize(),
+            success: function (response) {
+                $("#subscribeBtn").prop('disabled', false);
+                if (response == "true") {
+                    jQuery("#subscribe")[0].reset();
+                    $(".errorsubscribe").addClass("text-success");
+                    $(".errorsubscribe").html("Successfully send");
+                }
+                else {
+                    $(".errorsubscribe").addClass("text-danger");
+                    $(".errorsubscribe").html(response);
+                }
+            },
+            error: function (response) {
+                alert("Something went wrong");
+                $("#subscribeBtn").prop('disabled', false);
+            }
+        });
+        $("#subscribeBtn").prop('disabled', false);
+    });</script>

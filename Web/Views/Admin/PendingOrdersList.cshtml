@@ -1,4 +1,4 @@
-﻿@model DataModels.OrdersViewModel
+@model DataModels.OrdersViewModel
 
 @{
     ViewBag.Title = "PendingOrdersList";
@@ -523,9 +523,9 @@
         })
     }
     // Initialize original selected index (one-time)
-    function handleOnFocus1(selectObj) {
-        if (selectObj.dataset.originalSelectedIndex == '') {
-            selectObj.dataset.originalSelectedIndex = selectObj.selectedIndex;
-        }
-    }
+function handleOnFocus1(selectObj) {
+    if (selectObj.dataset.originalSelectedIndex == '') {
+        selectObj.dataset.originalSelectedIndex = selectObj.selectedIndex;
+    }
+}
 </script>

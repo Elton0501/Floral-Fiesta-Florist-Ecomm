@@ -25,7 +25,7 @@
                     @foreach (var item in Model.Product)
                     {
                         imgcount = imgcount + 1;
-                        var catname = CategoryService.Instance.CategoryName(item.CategoryId);
+						var catname = CategoryService.Instance.CategoryName(item.CategoryId);
                         if (item.Name != "Decor")
                         {
                             <div class="item">
@@ -40,7 +40,8 @@
                                             }
                                             else
                                             {
-                                                <li><a href="https://wa.me/919967060009?text=hey%0aI came across the @catname on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect? for @item.Name" target="_blank" style="cursor:pointer; color:var(--primary)"><i class="bi bi-whatsapp"></i></a></li>
+                                                 <li><a href="https://wa.me/918291979797?text=hey%0aI came across the @catname on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect? for @item.Name" target="_blank" style="cursor:pointer; color:var(--primary)"><i class="bi bi-whatsapp"></i></a></li>
+
                                             }
                                         </ul>
                                     </div>
@@ -48,10 +49,16 @@
                                 </div>
                                 <div class="down-content">
                                     <h4 class="downcontent-h4">@item.Name</h4>
-                                    <div class="d-flex">
-                                            <span>₹ @(item.DiscountPrice > 0 ? item.DiscountPrice : item.Price)</span>
-                                            <span style="text-decoration: line-through;" class="ml-2 text-danger @(item.DiscountPrice > 0 ? "" : "d-none")">₹ @item.Price</span>
-                                    </div>
+                                    @if (item.CategoryId != 3)
+                                    {
+                                        if(item.Price > 0)
+										{
+										    <div class="d-flex">
+                                                <span>₹ @(item.DiscountPrice > 0 ? item.DiscountPrice : item.Price)</span>
+                                                <span style="text-decoration: line-through;" class="ml-2 text-danger @(item.DiscountPrice > 0 ? "" : "d-none")">₹ @item.Price</span>
+                                            </div>
+										}
+                                    }
                                     <ul class="stars">
                                         <li><i class="@(item.Rating >= 1 ? "bi bi-star-fill":"bi bi-star")"></i></li>
                                         <li><i class="@(item.Rating >= 2 ? "bi bi-star-fill":"bi bi-star")"></i></li>

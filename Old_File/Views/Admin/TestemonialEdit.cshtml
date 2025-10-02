@@ -1,0 +1,128 @@
+﻿@model Entities.Testemonial
+
+<style>
+    .img-pro-box {
+        width: 17%;
+        margin: 1rem;
+        border-radius: 10px;
+    }
+
+
+    .error {
+        font-size: 1rem;
+        width: 100%;
+    }
+</style>
+
+<div class="adminpage-head">
+    <div class="card shadow mb-4">
+        <div class="form-horizontal">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4>Edit Testemonial</h4>
+            </div>
+            <hr />
+            <div class="card-body">
+                <form id="tes-edit">
+                    <input name="Id" id="id" value="@Model.Id" hidden />
+                    <input name="Created" value="@DateTime.Now" hidden />
+                    <div class="form-group">
+                        <label class="control-label">Name</label><br />
+                        <input class="form-control" name="Name" id="name" value="@Model.Name" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Info</label><br />
+                        <textarea class="form-control" name="Testemonial" id="txtTes" required ></textarea>
+                        <input value="@Model.Testimonial" id="acttestext" hidden/>
+                    </div>
+
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <div class="">
+                                <button" id="tesedit" type="button" class="btn btn-default btn-outline-primary">Edit</button">
+                            </div>
+                        </div>
+                        <div class="form-group ml-3">
+                            <div class="">
+                                <a id="tes-close" class="btn btn-default btn-outline-danger">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var texval = $("#acttestext").val()
+        $("#txtTes").val(texval);
+    });
+
+
+    $("#tes-close").click(function () {
+        $("#tes-add-container").hide();
+
+    });
+
+    $('#tes-edit').validate({
+        rules: {
+            Name: {
+                required: true,
+            },
+            Testemonial: {
+                required: true,
+            },
+        },
+        messages: {
+            Name: {
+                required: '* Info Name is required',
+            },
+            Testemonial: {
+                required: '* Testemonial is required',
+            },
+        }
+    });
+
+    $("#tesedit").click(function (e) {
+        e.preventDefault();
+        if ($("#tes-edit").valid()) {
+            $.ajax({
+                type: 'Post',
+                url: '@Url.Action("TestemonialEdit", "Admin")',
+                data: {
+                    name: $("#name").val(),
+                    testimonialString: $("#txtTes").val(),
+                    id: $("#id").val(),
+                    },
+            })
+            .done(function (response) {
+                if (response == "true") {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Testemonial edited successfully ',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    setTimeout(function () {// wait for 5 secs(2)
+                        window.location.reload(); // then reload the page.(3)
+                    }, 1550);
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                })
+            });
+         }
+     });
+
+</script>

@@ -3,10 +3,10 @@
 :root {
     /*theme color*/
     --head: #ffffff !important;
-    --primary: #417F34 !important;
+    --primary: #006045 !important;
     --text: white !important;
     --secondary: #1d1d1d !important;
-    --dark: #1E5631 !important;
+    --dark: #033427 !important;
     --sky: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
 }
 
@@ -35,6 +35,17 @@
     border-color: var(--dark) !important;
     background-color: var(--text) !important;
 }
+
+    .light-pro-bg {
+        border: 5px solid var(--dark);
+		background-image: url(/Content/Images/gb.png);
+        background-size: cover;
+    }
+    .dark-pro-bg {
+        border: 5px solid var(--primary);
+        background-image: url(/Content/Images/white-blur-bg.jpg);
+		background-size: cover;
+    }
 
 .owl-arrow-btn {
     color: var(--primary) !important;
@@ -130,7 +141,7 @@
 }
 
 .t-comment {
-    height: 15rem;
+    height: 10rem;
     overflow-y: scroll;
     padding: 0 25px;
     text-align: justify;
@@ -208,27 +219,27 @@
     color: var(--text);
 }
 
-.main-banner .left-content {
+.main-banner .left-content{
     height: 100% !important;
     padding-bottom: 28.5px !important;
 }
 
-.main-banner .left-content .carousel {
-    height: 100% !important;
+.main-banner .left-content .carousel{
+	height: 100% !important;
 }
 
-.main-banner .left-content .carousel .carousel-inner {
-    height: 100% !important;
+.main-banner .left-content .carousel .carousel-inner{
+	height:100% !important;
 }
 
-.main-banner .left-content .carousel .carousel-inner .carousel-item {
-    height: 100% !important;
+.main-banner .left-content .carousel .carousel-inner .carousel-item{
+	height:100% !important;
 }
 
-.main-banner .left-content .carousel .carousel-inner .carousel-item img {
-    height: 100% !important;
+.main-banner .left-content .carousel .carousel-inner .carousel-item img{
+	height:100% !important;
 }
 
-.our-services {
-    border: none !important;
+.our-services{
+	border: none !important;
 }

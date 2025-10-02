@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Entities.OrderItems>
+@model IEnumerable<Entities.OrderItems>
 @{
     ViewBag.Title = "Thankyou";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -37,6 +37,11 @@
     .item-img img{
         width: 30%;
     }
+	
+	.ty-logo {
+	    width: 32% !important;
+        align-self: center;
+	}
 
     .item-price h6{
         text-align: right;
@@ -63,19 +68,19 @@
             <div class="login-process">
                 <div class="login-main-container">
                     <div class="thankyou-wrapper">
-                        <div id="ty-show">
-                            @if (emailReceipt == "False")
+                        <div id="ty-show" style="display:flex; flex-direction:column;">
+                             @if (emailReceipt == "False")
                             {
                                 <h1 style="text-align: center;"><img src="http://montco.happeningmag.com/wp-content/uploads/2014/11/thankyou.png" alt="thanks" /></h1>
-                                <div class="ty-content">
-                                    <h4>We have recieved your order.. </h4>
-                                </div>
+						    <div class="ty-content">
+                                <h4>We have recieved your order.. </h4>
+                            </div>
                             }
                             else
                             {
-                                <img src="~/Content/Images/green-logo.png" />
+                                <img class="ty-logo" src="~/Content/Images/green-logo.svg" />
                             }
-
+                           
                         </div>
                         <hr />
                         <div class="order-details">
@@ -95,15 +100,15 @@
                             <h5 style="text-align:center">Order Summary</h5>
                             @foreach (var item in Model)
                             {
-                                var slot = OrdersService.Instance.SlotTime(item.SlotId);
+							    var slot = OrdersService.Instance.SlotTime(item.SlotId);
                                 <div class="order-item ml-md-5 mr-md-5 row">
                                     <div class="col-8">
                                         <div class="item-img d-flex">
-                                            <img src="@item.DefaultImage" />
+                                            <img class="dark-pro-bg" src="@item.DefaultImage" />
                                             <div class="item-info pl-3">
                                                 <h6>@item.Name</h6>
                                                 <h6>Qty: <span>@item.Quantity</span></h6>
-                                                <h6>Delivery Date: <span>@item.DDate</span></h6>
+												<h6>Delivery Date: <span>@item.DDate</span></h6>
                                                 <h6>Delivery Time: <span>@slot</span></h6>
                                             </div>
                                         </div>
@@ -143,7 +148,7 @@
             </div>
             <hr />
             <div id="ty-footer" class="text-center">
-                <p>We hope your shopping experience with Floral Fiesta was amazing</p>
+                <p>Your order will be shipped within 7 working days</p>
                 <p>Hope we see you soon...</p>
                 <a href="@Url.Action("Index" , "Home")" class="light-btn btn mt-4">Continue Shopping &nbsp; <i class="bi bi-arrow-right"></i></a>
             </div>

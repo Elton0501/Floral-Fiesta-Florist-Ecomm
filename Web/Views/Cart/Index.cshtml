@@ -1,4 +1,4 @@
-﻿@model DataModels.CartView
+@model DataModels.CartView
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,6 +6,9 @@
 }
 
 <style>
+    input[type="date"] {
+        display: inline-flex;
+    }
     .order-item {
         padding: 1rem 0;
     }
@@ -191,7 +194,7 @@
                             
                         </div>
                         <div id="@("descr" + item.Id)">
-                            <label class="mt-3">What occassion do you want this for?</label><small id="@("ddesc" + count)"></small><br />
+                            <label style="color:var(--primary);" class="mt-3">What special message would you like us to deliver on your behalf?</label><small id="@("ddesc" + count)"></small><br />
                             <textarea id="@("dtb" + count)" placeholder="This will help us curate it better" rows="3" cols="40" class="cart-item-desc p-2" data-id="@item.Id">@item.Description</textarea>
                         </div>
 

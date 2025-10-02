@@ -868,7 +868,6 @@
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\ckeditor\skins\moono-lisa\readme.md" />
-    <Content Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Admin\WebsiteInformation.cshtml" />
     <Content Include="Views\Admin\InfoAdd.cshtml" />
@@ -942,6 +941,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

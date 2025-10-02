@@ -1,0 +1,322 @@
+﻿@model IEnumerable<Entities.Product>
+@{
+    ViewBag.Title = "Lylac Shoppee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var seasonimg = KeyService.Instance.SeasonImg("SeasonImg");
+    int imgcount = 0;
+}
+
+<style>
+    #toasts {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        align-items: flex-end;
+        z-index: 9999;
+        background: white;
+    }
+
+    .toast {
+        border-radius: 5px;
+        padding: 0.1rem 1rem;
+        margin: .5rem;
+        opacity: 1;
+        border: none;
+        box-shadow: none;
+    }
+
+    .productlist .search-container button {
+        padding: 5px 9px;
+        margin-top: 12px;
+        margin-right: 1px;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        margin-left: -41px;
+        background: #99c329;
+        border-radius: 63px;
+    }
+
+
+    .productlist input[type=search] {
+        padding: 8.5px 25px !important;
+        margin-top: 8px;
+        font-size: 17px;
+        border-radius: 21px;
+        border: 1px solid #dedede;
+        width: 45%;
+        position: relative;
+        outline: none;
+    }
+
+    .tile {
+        width: 80%;
+        margin: 60px auto;
+    }
+
+    .inner-content {
+        opacity: 0;
+    }
+
+    #tile-1 .tab-pane {
+        padding: 15px;
+        height: 80px;
+    }
+
+    #tile-1 .nav-tabs {
+        position: relative;
+        border: none !important;
+        background-color: #fff;
+        /*   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2); */
+        border-radius: 6px;
+    }
+
+        #tile-1 .nav-tabs li {
+            margin: 0px !important;
+        }
+
+            #tile-1 .nav-tabs li a {
+                position: relative;
+                margin-right: 0px !important;
+                padding: 20px 40px !important;
+                font-size: 16px;
+                border: none !important;
+                color: #333;
+            }
+
+        #tile-1 .nav-tabs a:hover {
+            background-color: #fff !important;
+            border: none;
+        }
+
+    #tile-1 .slider {
+        display: inline-block;
+        width: 30px;
+        height: 4px;
+        border-radius: 3px;
+        background-color: #2a2a2a;
+        position: absolute;
+        z-index: 99;
+        bottom: 0;
+        transition: all .4s linear;
+    }
+
+    #tile-1 .nav-tabs .active {
+        background-color: transparent !important;
+        border: none !important;
+        color: #2a2a2a !important;
+    }
+
+    .btn-cartt {
+        cursor: pointer;
+        transition: all 0.4s;
+    }
+
+    @@media (max-width : 500px) {
+        .productlist input[type=search] {
+            width: 85%;
+        }
+    }
+</style>
+
+<!-- ***** Main Banner Area Start ***** -->
+<div class="page-heading" id="top" @*style=" background-image: url(..@seasonimg.Description);"*@>
+    <img style="width:100%;" src="@seasonimg.Description"/>
+</div>
+<!-- ***** Main Banner Area End ***** -->
+<!-- ***** Products Area Starts ***** -->
+<section class="section" id="products">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 d-none">
+                <div class="section-heading">
+                    <h2>Our Latest Products</h2>
+                    <span>Check out all of our products.</span>
+                </div>
+                <hr>
+                <div class="productlist">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row" id="ProductsView">
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    imgcount = imgcount + 1;
+                    var catname = CategoryService.Instance.CategoryName(item.CategoryId);
+                    <div class="col-lg-4">
+                        <div class="item">
+                            <div class="thumb">
+                                <div class="hover-content">
+                                    <ul>
+                                        <li><a href="@Url.Action("ProductView", "Product",new {Id= HelperService.Instance.ConvertStringToHex(item.Id.ToString(),System.Text.Encoding.Unicode),name=item.Name.Replace(' ','-').TrimStart('-').TrimEnd('-') })"><i class="bi bi-eye"></i></a></li>
+                                        @if (item.isWhatsapp == false)
+                                        {
+                                            <li class="@("RemoveCartClassli" + item.Id) @(item.isAvailCart == true ? "":"d-none")"><a class="@("RemoveCartClass" + item.Id) bg-danger text-white btn-cartt" id="@("RemoveCart" + item.Id)" onclick="RemoveCart('@item.Id')"><i class="bi bi-bag-x"></i></a></li>
+                                            <li class="@("AddCartClassli" + item.Id) @(item.isAvailCart == true ? "d-none":"")"><a class="@("AddCartClass" + item.Id) btn-cartt" id="@("AddCart" + item.Id)" onclick="cart('@item.Id')"><i class="bi bi-bag-plus"></i></a></li>
+
+                                        }
+                                        else
+                                        {
+                                            <li><a href="https://wa.me/919004755779?text=hey%0a%I%20Would%20like%20to%20inquire%20about%20 @item.Name" target="_blank" style="cursor:pointer; color:var(--primary)"><i class="bi bi-whatsapp"></i></a></li>
+                                        }
+                                    </ul>
+                                </div>
+                                <img src="@item.imgdefault" id="@imgcount" alt="@item.Name">
+                            </div>
+                            <div class="down-content">
+                                <h4>@item.Name</h4>
+                                @if (item.isWhatsapp == false)
+                                {
+                                    if (item.Price > 0)
+                                    {
+                                        <div class="d-flex">
+                                            <span>₹ @(item.DiscountPrice > 0 ? item.DiscountPrice : item.Price)</span>
+                                            <span style="text-decoration: line-through;" class="ml-2 text-danger @(item.DiscountPrice > 0 ? "" : "d-none")">₹ @item.Price</span>
+                                        </div>
+                                    } 
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class=" col-12 text-center">
+                    <h6 class="text-capitalize bi-bag-x-fill">No Product available.</h6>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- ***** Products Area Ends ***** -->
+<script>
+
+    $(document).ready(function () {
+        for (var i = 1; i <= @Model.Count(); i++) {
+            if (i % 2 == 0) {
+                $("#" + i).addClass('light-pro-bg');
+            }
+            else {
+                $("#" + i).addClass('dark-pro-bg');
+            }
+        }
+    });
+
+
+    function cart(id) {
+        $("#Cart" + id).prop('disabled', true);
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("AddInCart", "Cart")',
+                data: {
+                    ProductId: id
+                },
+                success: function (result) {
+                    if (result.Result == true) {
+                        $("#cart-quantity").text(result.Count);
+                        $(".RemoveCartClassli" + id).removeClass("d-none");
+                        $(".AddCartClassli" + id).addClass("d-none");
+                        createNotification("Added to Cart","Add");
+                    }
+                    else if (result.isLogin == "false")
+                    {
+                       $.ajax({
+                           url: '@Url.Action("PartialLogin", "Account")',
+                           data: {
+                               url: "/Product/Seasonal",
+                           },
+                           success: function (result) {
+                               $(".loginPartial").html(result);
+                               $('#exampleModalCenter1').modal('show');
+                               $(".login-fullscreen").removeClass('col-md-6 col-lg-4');
+                           },
+                            error: function () {
+                                alert("Something Went Wrong");
+                           }
+                       })
+                    }
+                },
+                 error: function () {
+                     alert("Something Went Wrong");
+                     $("#Cart" + id).prop('disabled', false);
+                }
+            })
+        }
+        $("#Cart" + id).prop('disabled', false);
+    }
+    function RemoveCart(id) {
+        $("#Cart" + id).prop('disabled', true);
+        if (id != null) {
+            $.ajax({
+                type:"POST",
+                url: '@Url.Action("RemoveInCart", "Cart")',
+                data: {
+                    CartItemId: id,
+                    homePage: true,
+                },
+                success: function (response) {
+                   if (response.Result == true)
+                   {
+                       $("#cart-quantity").html(response.Count);
+                       $(".RemoveCartClassli" + id).addClass("d-none");
+                       $(".AddCartClassli" + id).removeClass("d-none");
+                       createNotification("Removed from Cart","Remove");
+                   }
+                   else {
+                       alert("Sorry! Something Went Wrong");
+                   }
+                },
+                 error: function () {
+                     alert("Sorry! Something Went Wrong");
+                }
+            })
+        }
+        $("#Cart" + id).prop('disabled', false);
+    }
+
+
+    const toasts = document.getElementById('toasts')
+    function createNotification(messages, type) {
+        $("#toasts").html("");
+        const notif = document.createElement('div')
+        notif.classList.add('toast')
+        if (type == "Add") {
+            var styles = {
+                border: "2px solid #28a745",
+                color: "#28a745"
+            };
+            $("#toasts").css(styles);
+            notif.innerHTML = '<i class=\"bi bi-check-circle-fill pr-2\" style="font-size: 22px;"></i>' + messages;
+        }
+        else {
+            var styles1 = {
+                border: "2px solid #dc3545",
+                color: "#dc3545"
+            };
+            $("#toasts").css(styles1);
+            notif.innerHTML = '<i class=\"bi bi-x-circle-fill pr-2\" style="font-size: 22px;"></i>' + messages;
+        }
+        toasts.appendChild(notif)
+
+        setTimeout(() => {
+            notif.remove()
+        }, 5000);
+    }
+
+    $("#tile-1 .nav-tabs a").click(function () {
+        var position = $(this).parent().position();
+        var width = $(this).parent().width();
+        $("#tile-1 .slider").css({ "left": + position.left, "width": width });
+    });
+    var actWidth = $("#tile-1 .nav-tabs").find(".active").parent("li").width();
+    var actPosition = $("#tile-1 .nav-tabs .active").position();
+    $("#tile-1 .slider").css({ "left": + actPosition.left, "width": actWidth });
+</script>

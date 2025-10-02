@@ -447,7 +447,7 @@ header
 .background-header .main-nav .menu-trigger span,
 .background-header .main-nav .menu-trigger span:before,
 .background-header .main-nav .menu-trigger span:after {
-  background-color: #1e1e1e;
+  background-color: white;
 }
 
 .header-area .main-nav .menu-trigger span:before,
@@ -467,7 +467,7 @@ header
 
 .background-header .main-nav .menu-trigger span:before,
 .background-header .main-nav .menu-trigger span:after {
-  background-color: #1e1e1e;
+  background-color: white;
 }
 
 .header-area .main-nav .menu-trigger span:before,
@@ -512,7 +512,7 @@ header
 }
 
 .background-header .main-nav .menu-trigger.active span:before {
-  background-color: #1e1e1e;
+  background-color: white;
 }
 
 .header-area .main-nav .menu-trigger.active span:after {
@@ -524,7 +524,7 @@ header
 }
 
 .background-header .main-nav .menu-trigger.active span:after {
-  background-color: #1e1e1e;
+  background-color: white;
 }
 
 .header-area.header-sticky {
@@ -714,17 +714,19 @@ banner
 
 .main-banner .right-content .right-first-image .thumb .inner-content {
   position: absolute;
-  top: 50%;
+  bottom: -10%;
   transform: translateY(-50%);
   width: 100%;
   text-align: center;
+  padding: 10px 0;
+  background-color: #00604596;
 }
 
 .main-banner .right-content .right-first-image .thumb .inner-content h4 {
   color: #fff;
   font-size: 24px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 3px;
 }
 
 .main-banner .right-content .right-first-image .thumb .inner-content span {
@@ -740,7 +742,7 @@ banner
         left: 15px;
         bottom: 15px;
         text-align: center;
-        background-color: #417f34e6;
+        background-color: #006045f2;
         opacity: 0;
         visibility: hidden;
         transition: all 0.5s;
@@ -809,12 +811,6 @@ Men
   color: #a1a1a1;
   font-weight: 500;
   display: block;
-}
-
-#men .item .down-content ul.stars {
-  position: absolute;
-  right: 0;
-  top: 30px;
 }
 
 #men .item .down-content ul.stars li {
@@ -972,11 +968,6 @@ Women
   display: block;
 }
 
-#women .item .down-content ul.stars {
-  position: absolute;
-  right: 0;
-  top: 30px;
-}
 
 #women .item .down-content ul.stars li {
   display: inline;
@@ -1132,11 +1123,6 @@ Kids
   display: block;
 }
 
-#kids .item .down-content ul.stars {
-  position: absolute;
-  right: 0;
-  top: 30px;
-}
 
 #kids .item .down-content ul.stars li {
   display: inline;
@@ -1349,7 +1335,7 @@ Explore
   font-size: 24px;
   font-weight: 700;
   color: var(--primary);
-  padding-top: 110px;
+  padding-top: 95px;
   margin-bottom: 5px;
 }
 
@@ -1651,11 +1637,7 @@ Products Page
   display: block;
 }
 
-#products .item .down-content ul.stars {
-  position: absolute;
-  right: 0;
-  top: 20px;
-}
+
 
 #products .item .down-content ul.stars li {
   display: inline;
@@ -1766,15 +1748,12 @@ Single Product Page
     font-weight: 500;
     display: block;
     margin-top: 5px;
-    border-bottom: 1px solid var(--dark);
     padding-bottom: 20px;
     opacity: 0.7;
 }
 
 #product .right-content ul.stars {
-  position: absolute;
-  right: 0;
-  top: 0;
+
 }
 
 #product .right-content ul.stars li {
@@ -1788,7 +1767,7 @@ Single Product Page
         font-weight: 500;
         display: block;
         margin-top: 25px;
-        opacity: 0.7;
+        opacity: 0.8;
     }
 
 #product .right-content .quote {
@@ -2333,7 +2312,7 @@ responsive
 
 #preloader {
   overflow: hidden;
-  background-color: black;
+  background-color: white;
   left: 0;
   right: 0;
   top: 0;
@@ -2351,8 +2330,8 @@ responsive
   display: block;
   position: absolute;
   margin: auto;
-  width: 50px;
-  height: 50px;
+  width: 200px;
+  height: 65px;
 }
 
 #preloader .jumper > div {
@@ -2366,8 +2345,8 @@ responsive
   opacity: 0;
   width: 50px;
   height: 50px;
-  -webkit-animation: jumper 1s 0s linear infinite;
-  animation: jumper 1s 0s linear infinite;
+  -webkit-animation: jumper 4s 0s linear infinite;
+  animation: jumper 4s 0s linear infinite;
 }
 
 #preloader .jumper > div:nth-child(2) {

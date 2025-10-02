@@ -1,13 +1,7 @@
 ﻿@model DataModels.HomeViewModel
 @{
-
-    var seasonalimg = KeyService.Instance.SeasonImg("SeasonImg");
-    var seo = KeyService.Instance.keydata("SEO").Count() > 0 ? KeyService.Instance.keydata("SEO").FirstOrDefault().Description : "";
     ViewBag.Title = "Floral Fiesta";
-    ViewBag.Description = "We at Floral Fiesta are your one-stop solution for all your gifting needs. Redefining traditions and creating memories is our forte for we vouch to make your gifting journey not only easier but a memorable experience.";
-    ViewBag.Keywords = seo;
-    ViewBag.ogTitle = "Floral Fiesta";
-    ViewBag.Img = "Content/Images/vig/home_pg2.jpg";
+    var seasonalimg = KeyService.Instance.SeasonImg("SeasonImg");;
 }
 
 <style>
@@ -58,15 +52,17 @@
         left: 15px;
         bottom: 15px;
         text-align: center;
-        background-color: #417f34e6;
+        background-color: #006045f2;
     }
 
     #explore .second-text:hover .overlay {
         opacity: 1;
+		display: flex;
     }
 
     #explore .first-text:hover .overlay {
         opacity: 1;
+		display: flex;
     }
 
     #explore .text {
@@ -75,10 +71,10 @@
         position: absolute;
         text-align: center;
         padding: 15px;
+		align-self: center;
     }
-
-
-    @@media (max-width: 1200px) {
+	
+	@@media (max-width: 1200px) {
         .abt-block {
             display: block;
         }
@@ -118,16 +114,15 @@
                         <ol class="carousel-indicators">
                             <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
                             <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
                         </ol>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="~/Content/Images/left-banner-image.jpg" class="d-block w-100" alt="...">
+                                <img src="~/Content/Images/b1.jpg" class="d-block w-100" alt="...">
                                 <div class="carousel-caption d-md-block">
                                     <div class="thumb">
                                         <div class="inner-content">
-                                            <h5>First slide label</h5>
-                                            <span>Some representative placeholder content for the first slide.</span>
+										<h5>Floral Fiesta</h5>
+                                            <span>You bring the love. We’ll bring the flowers.</span>
                                             <div class="main-border-button">
                                                 <a href="@(Request.Url.GetLeftPart(UriPartial.Authority))#BestSeller">Purchase Now!</a>
                                             </div>
@@ -136,33 +131,19 @@
                                 </div>
                             </div>
                             <div class="carousel-item">
-                                <img src="~/Content/Images/left-banner-image.jpg" class="d-block w-100" alt="...">
+                                <img src="~/Content/Images/b1.png" class="d-block w-100" alt="...">
                                 <div class="carousel-caption d-md-block">
                                     <div class="thumb">
                                         <div class="inner-content">
-                                            <h5>Second slide label</h5>
-                                            <span>Some representative placeholder content for the first slide.</span>
+                                            
                                             <div class="main-border-button">
-                                                <a href="#">Purchase Now!</a>
+                                                <a href="@Url.Action("Seasonal","Product")">Gift Now!</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="carousel-item">
-                                <img src="~/Content/Images/left-banner-image.jpg" class="d-block w-100" alt="...">
-                                <div class="carousel-caption d-md-block">
-                                    <div class="thumb">
-                                        <div class="inner-content">
-                                            <h5>Third slide label</h5>
-                                            <span>Some representative placeholder content for the first slide.</span>
-                                            <div class="main-border-button">
-                                                <a href="#">Purchase Now!</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -196,7 +177,7 @@
                                                     {
                                                         <a href="@Url.Action("Products","Product", new { catId = HelperService.Instance.ConvertStringToHex(Model.Categories.ElementAtOrDefault(i).Id.ToString(),System.Text.Encoding.Unicode), category = Model.Categories.ElementAtOrDefault(i).Name.Replace(' ','-').TrimStart('-').TrimEnd('-') })">Discover More</a>
                                                     }
-                                                    else         
+                                                    else
                                                     {
                                                         <a href="@Url.Action("Decor","Product")">Discover More</a>
                                                     }
@@ -212,7 +193,7 @@
                 </div>
             </div>
         </div>
-    </div>      
+    </div>
 </div>
 <!-- ***** Main Banner Area End ***** -->
 <!-- ***** Main Banner Area End ***** -->
@@ -265,7 +246,7 @@
                 <div class="col-lg-6">
                     <div class="section-heading">
                         <h2 class="prod-head">Best sellers</h2>
-                        <span>Blooming with popularity. Shop our best-selling bouquets now!</span>
+                        <span>Blooming with popularity. Shop our best-sellers now!</span>
                     </div>
                 </div>
             </div>
@@ -325,6 +306,7 @@
     </div>
 </section>
 <!-- ***** Kids Area Ends ***** -->
+
 <!-- ***** Custom Area Ends ***** -->
 <div class="custom-box">
     <div class="custom-img">
@@ -332,9 +314,10 @@
     </div>
     <div class="custom-content">
         <h1>CUSTOM MADE</h1>
-        <p>We tailor to ypur specific needs</p>
-        @*<a href="https://api.whatsapp.com/send?phone=919004755779&text=I'm%20interested%20in%20your%20services" target="_blank"">Click Here</a>*@
-        <a href="https://wa.me/919967060009?text=Hey,%0aI got to know about Floral Fiesta through your website. I'd like to enquire about cusomization. Can we connect?" target="_blank">Click Here</a>
+        <p>We tailor to your specific needs</p>
+        @*<a href="https://api.whatsapp.com/send?phone=918291979797&text=I'm%20interested%20in%20your%20services" target="_blank"">Click Here</a>*@
+                <a href="https://wa.me/919967060009?text=Hey,%0aI got to know about Floral Fiesta through your website. I'd like to enquire about cusomization. Can we connect?" target="_blank">Click Here</a>
+
     </div>
 </div>
 <!-- ***** Custom Area Ends ***** -->
@@ -344,7 +327,7 @@
         <div class="row abt-block">
             <div class="col-lg-6 abt-cont">
                 <div class="left-content">
-                    <h2>About us..</h2>
+                    <h2>About Us...</h2>
                     <span>
                         Who doesn't like to be reminded that they are loved, valued and appreciated? However, our lives are busier than ever and no one wishes to deal with hassles like selecting a gift.
                     </span>
@@ -354,12 +337,15 @@
                     <span>
                         With a sparkle of personal touch, we make your hampers and gifts special and unique.
                     </span>
+					 <span>
+                        <a style="color: var(--dark)" href="https://drive.google.com/drive/folders/12TnHhZR12C9JoGHxBnulUDvb4aVxRnUX?usp=share_link ">Check out our entire catalogue here</a>
+                    </span>
                     <div class="main-border-button">
-                        <a class="light-btn" href="products.html">Discover More</a>
+                        <a class="light-btn" href="@Url.Action("About","Home")">Discover More</a>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 abt-vims d-lg-block d-md-none">
+            <div class="col-lg-6 d-lg-block d-md-none abt-vims">
                 <div class="right-content pt-5">
                     <div class="row">
                         <div class="col-lg-6">
@@ -367,21 +353,19 @@
                                 <h4>Vision</h4>
                                 <div class="overlay">
                                     <div class="text">
-                                        Our mission is to make your celebration special by providing the best gifting solutions
-                                        tailored to your needs. We vow to not only give you
-                                        the best quality of service but also a memorable experience for a lifetime.
+                                        A brand that you can trust and rely on for delivering bespoke bouquets and hampers for all your special celebrations.
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="first-image">
-                                <img src="~/Content/Images/explore-image-01.jpg" alt="">
+                                <img src="~/Content/Images/explore-image-01.png" alt="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="second-image">
-                                <img src="~/Content/Images/explore-image-02.jpg" alt="">
+                                <img src="~/Content/Images/explore-image-02.png" alt="">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -409,7 +393,7 @@
         <div class="col-lg-6 cont">
             <div class="section-heading">
                 <h2>Say Hello. Don't Be Shy!</h2>
-                <span>Details to details is what makes Hexashop different from the other themes.</span>
+                <span>And our team will revert back a.s.a.p.</span>
                 <span class="error"></span>
                 <br />
             </div>
@@ -447,7 +431,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="section-heading">
-                    <h2 class="prod-head">Testemonials</h2>
+                    <h2 class="prod-head">Testimonials</h2>
                 </div>
             </div>
         </div>

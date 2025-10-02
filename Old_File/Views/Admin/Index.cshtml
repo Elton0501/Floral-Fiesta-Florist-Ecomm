@@ -1,0 +1,455 @@
+﻿@model DataModels.AdminViewModel
+@{
+    int PCount = 0;
+    int Count = 0;
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<title>Dashboard</title>
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    </div>
+    <div class="row dash-boxes">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total User
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @Model.TotalUser</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fa-2x" style=" color: #3a61d0;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Today Orders
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="TodayOrders"> @Model.TodayOrdersCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-date fa-2x" style=" color: #1cc88a;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Monthly Order
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="MonthlyOrders"> @Model.MonthlyOrdersCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-month fa-2x" style=" color: #36b9cc;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Yearly Order
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="YearlyOrders"> @Model.YearlyOrdersCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-check fa-2x" style=" color: #e85547;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Products
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @Model.TotalProduct</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-award fa-2x" style=" color: #3a61d0;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Today Earning
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="TodayEarnings"> @Model.TodayEarning</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-date fa-2x" style=" color: #1cc88a;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Monthly Earning
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="MonthlyEarnings"> @Model.MonthlyEarning</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-month fa-2x" style="color: #36b9cc;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Yearly Earning
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="YearlyEarning"> @Model.YearlyEarning</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-check fa-2x" style=" color: #e85547;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bg-white p-3">
+        <div class="charts col-lg-6 col-md-6 col-sm-12">
+            <h6 class="text-center p-0 m-0 text-uppercase">
+                City Orders percentage %
+            </h6>
+            <canvas id="myChart4"></canvas>
+        </div>
+        <div class="charts col-lg-6 col-md-6 col-sm-12">
+            <h6 class="text-center p-0 m-0 text-uppercase">
+                Orders Payment Method %
+            </h6>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <div class="Newcharts mt-3 bg-white p-3">
+        <h6 class="text-center p-0 m-0 pt-3 text-uppercase">
+            No. of Orders Between two dates
+        </h6>
+        <div class="d-flex flex-wrap">
+            <div class="mr-2">
+                <small class="pr-2">Start Date</small><input type="date" id="StartDate" class="form-control" />
+            </div>
+            <div class="mr-2">
+                <small class="pr-2">End Date</small><input type="date" id="EndDate" class="form-control" />
+            </div>
+            <div class="align-self-end">
+                <button onclick="daySale()" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+        <canvas id="myChart2"></canvas>
+    </div>
+    <div class="row">
+        <div class="adminpage-head mt-3 col-lg-6 col-md-6" style="padding: 0rem 0.5rem;">
+            <div class="col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary text-uppercase">User Orders</h6>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="itemTable" cellspacing="0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>City</th>
+                                    <th>Order Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.userOrdersCounts)
+                                {
+                                    Count = Count + 1;
+                                    <tr>
+                                        <td>@Count</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.City</td>
+                                        <td>@item.Count</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="adminpage-head mt-3 col-lg-6 col-md-6" style=" padding: 0rem 0.5rem;">
+            <div class="col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary text-uppercase">Item Orders</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" cellspacing="0">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>#</th>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    @foreach (var item in Model.OrderItemsCount)
+                                    {
+                                        PCount = PCount + 1;
+                                    <tr>
+                                        <th>@PCount</th>
+                                        <th>@item.PId</th>
+                                        <th>@item.Name</th>
+                                        <th>@item.Count</th>
+                                    </tr>
+                                }
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<script>
+    $(document).ready(function () {
+        TriCharts();
+    });
+    let myChart2 = new Chart();
+    daySale();
+    function daySale() {
+        if ($("#StartDate").val() > $("#EndDate").val()) {
+            alert("End date should be greater then start date");
+        }
+        else {
+            myChart2.destroy();
+            daySaleData();
+        }
+    }
+    function TriCharts() {
+        $.ajax({
+            url: '/Admin/pieChart',
+            success: function (response) {
+                var Days = [];
+                var value = [];
+                for (var i = 0; i < response.length; i++) {
+                    Days.push(response[i].Key);
+                    value.push(response[i].Value);
+                }
+                const ctx = document.getElementById('myChart').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: Days,
+                        datasets: [{
+                            label: '% of Orders',
+                            data: value,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgb(231, 216, 84)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                            }
+                        }
+                    },
+                });
+            },
+            error: function (response) {
+                alert("Something went wrong!");
+            }
+        })
+        $.ajax({
+            url: '/Admin/doughnut',
+            success: function (response) {
+                var Month = [];
+                var value = [];
+                for (var i = 0; i < response.length; i++) {
+                    Month.push(response[i].Key);
+                    value.push(response[i].Value);
+                }
+                const ctx = document.getElementById('myChart4').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Month,
+                        datasets: [{
+                            label: 'No. of Orders',
+                            data: value,
+                            backgroundColor: [
+                                '#f44336a6',
+                                'aliceblue',
+                                '#00800070',
+                                'deepskyblue',
+                                '#ffff0061',
+                                'Pink',
+                                '#607d8b',
+                                '#2e2f32',
+                                '#ff9800',
+                                'Grey',
+                                'Purpel',
+                                '#795548',
+                            ],
+                            borderColor: [
+                                '#f44336a6',
+                                'aliceblue',
+                                '#00800070',
+                                'deepskyblue',
+                                '#ffff0061',
+                                'Pink',
+                                '#607d8b',
+                                '#2e2f32',
+                                '#ff9800',
+                                'Grey',
+                                'Purpel',
+                                '#795548',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                            }
+                        }
+                    },
+                });
+            },
+            error: function (response) {
+                alert("Something went wrong!");
+            }
+        })
+    };
+    function daySaleData() {
+        var first = $("#StartDate").val();
+        var second = $("#EndDate").val();
+        $.ajax({
+            url: '/Admin/barChart',
+            data: {
+                First: first,
+                Second: second
+            },
+            success: function (response) {
+                $("#StartDate").val(first);
+                $("#EndDate").val(second);
+                var Days = [];
+                var value = [];
+                for (var i = 0; i < response.length; i++) {
+                    Days.push(response[i].Key);
+                    value.push(response[i].Value);
+                }
+                let config = {
+                    type: 'bar',
+                    data: {
+                        labels: Days,
+                        datasets: [{
+                            label: 'No. of Orders',
+                            data: value,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgb(231, 216, 84)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgb(231, 216, 84)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                            }
+                        }
+                    },
+                };
+                if (myChart2 != null) {
+                    myChart2.destroy();
+                }
+                myChart2 = new Chart(document.getElementById('myChart2'), config);
+            },
+            error: function (response) {
+                alert("Soory Day sale chart have some issue!");
+            }
+        })
+    }
+</script>

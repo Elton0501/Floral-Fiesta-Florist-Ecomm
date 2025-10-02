@@ -47,15 +47,15 @@
         border-radius: 5px;
         cursor: pointer;
     }
-
-    .light-btn{
+	
+	.light-btn{
         border:1px solid var(--primary);
         transition: all 0.4s;
     }
-
-    .all-pg-btn {
-        display: none;
-    }
+	
+	.all-pg-btn{
+	    display: none;
+	}
 
 
 </style>
@@ -91,7 +91,7 @@
                             foreach (var item in Model.ProductImages)
                             {
                                 <div class="col-lg-4 col-6">
-                                    <img class="w-100 mb-3" onclick="ImageClick('@item.Image')" src="@item.Image" />
+                                    <img class="w-100 mb-5" style="border:5px solid var(--dark)" onclick="ImageClick('@item.Image')" src="@item.Image" />
                                 </div>
                             }
                         }
@@ -121,7 +121,8 @@
     </div>
 </div>
 
-<a href="https://wa.me/919967060009?text=hey%0aI came across the Decor page on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect?" target="_blank" class="fixed-button light-btn"><i class="bi bi-whatsapp"></i> For Decor Enquiry and Orders</a>
+<a href="https://wa.me/918291979797?text=hey%0aI came across the Decor page on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect?" target="_blank" class="fixed-button light-btn"><i class="bi bi-whatsapp"></i> For Decor Enquiry and Orders</a>
+
 
 <script>
     function ImageClick(i) {

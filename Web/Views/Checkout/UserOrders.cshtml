@@ -1,4 +1,4 @@
-﻿@model DataModels.UserOrdersDataModel
+@model DataModels.UserOrdersDataModel
 @{
     ViewBag.Title = "UserOreders";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -188,11 +188,11 @@
                             <div class="order-item ml-md-5 mr-md-5 row">
                                 <div class="col-9">
                                     <div class="item-img d-flex">
-                                        <img src="@item.DefaultImage" />
+                                        <img class="dark-pro-bg" src="@item.DefaultImage" />
                                         <div class="item-info pl-3">
                                             <h6>@item.Name</h6>
                                             <h6>Qty: <span>@item.Quantity</span></h6>
-                                            <h6>Delivery Date: <span>@item.DDate"</span></h6>
+                                            <h6>Delivery Date: <span>@item.DDate</span></h6>
                                             <h6>Delivery Time: <span>@slot</span></h6>
                                             <h6>Status: <span>@item.Orders.OrderStatusName</span></h6>
                                         </div>
@@ -217,7 +217,7 @@
                             <div class="order-item ml-md-5 mr-md-5 row">
                                 <div class="col-9">
                                     <div class="item-img d-flex">
-                                        <img src="@item.DefaultImage" />    
+                                        <img class="dark-pro-bg" src="@item.DefaultImage" />    
                                         <div class="item-info pl-3">
                                             <h6>@item.Name</h6>
                                             <h6>Qty: <span>@item.Quantity</span></h6>

@@ -124,9 +124,9 @@
                         <tr>
                             <th>#</th>
                             <th>Product Name</th>
-                            <th>Image</th>
+							<th>Image</th>
                             <th>Product Category</th>
-                            <th>Seasonal/NewArrivals</th>
+                             <th>Seasonal/NewArrivals</th>
                             <th>Best Sellers</th>
                         </tr>
                     </thead>
@@ -137,7 +137,7 @@
                             <tr>
                                 <td>@Count</td>
                                 <td>@item.Name</td>
-                                <td><img src="@item.imgdefault" style="width:50%" /></td>
+								<td><img src="@item.imgdefault" style="width:50%" /></td>
                                 <td>@CategoryService.Instance.CategoryName(item.CategoryId)</td>
                                 <td>
                                     <label class="switch">
@@ -149,7 +149,7 @@
                                         <span class="slider round" id=""></span>
                                     </label>
                                 </td>
-                                <td>
+								<td>
                                     <label class="switch">
                                         @{
                                             var trueFeaturedStatus = item.Isfeatured == true ? "Checked" : string.Empty;
@@ -286,8 +286,8 @@
         }
 
     });
-
-    $('.featured-cb').change(function () {
+	
+	$('.featured-cb').change(function () {
         if ($(this).prop("checked") == true) {
             Swal.fire({
             title: 'Are you sure?',

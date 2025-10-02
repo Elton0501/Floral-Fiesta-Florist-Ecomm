@@ -1,0 +1,24 @@
+﻿@model Dictionary<string, string>
+@{
+    Layout = null;
+    ViewBag.Title = "Payment Successful";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PaymentSuccessful</title>
+</head>
+<body>
+    <div>
+        <h2>Payment Successful</h2>
+        @foreach (var item in Model)
+        {
+            <h3> @item.Key &nbsp;&nbsp; @item.Value</h3>
+            <br />
+        }
+    </div>
+</body>
+</html>

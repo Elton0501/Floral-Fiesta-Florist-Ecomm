@@ -1,7 +1,7 @@
 ﻿@model Entities.Product
-@{
-    var menuCat = ViewBag.CatItem;
-}
+    @{ 
+        var menuCat = ViewBag.CatItem;
+    }
 <style>
     .img-pro-box {
         width: 100%;
@@ -60,123 +60,124 @@
             </div>
             <hr />
 
-            <div class="card-body">
-                <form id="Productcreate">
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label class="control-label">Product Name</label><br />
-                            <input class="form-control" name="Name" required />
-                        </div>
+        <div class="card-body">
+            <form id="Productcreate">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Product Name</label><br />
+                        <input class="form-control" name="Name" required />
+                    </div>
 
-                        <div class="form-group col-md-3">
-                            @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CatItem, optionLabel: "Select Category", htmlAttributes: new { @class = "form-control categoryDropDown" })
-                            </div>
-                        </div>
-                        <div class="form-group col-3">
-                            <label for="exampleFormControlSelect1">select SubCategory</label>
-                            <select class="form-control" id="subCategoryDropDown" name="SubCategoryId"></select>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-10" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CatItem, optionLabel: "Select Category", htmlAttributes: new { @class = "form-control categoryDropDown" })
                         </div>
                     </div>
+                    <div class="form-group col-3">
+                        <label for="exampleFormControlSelect1">select SubCategory</label>
+                        <select class="form-control" id="subCategoryDropDown" name="SubCategoryId"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group">
+                        <label class="control-label">Product Description</label><br />
+                         <textarea id="prodesc" class="form-control" name="prodesc"></textarea>
+                         <input class="form-control" id="pdescription" name="Description" hidden />
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="form-group">
                         <div class="form-group">
-                            <label class="control-label">Product Description</label><br />
-                            <textarea id="prodesc" class="form-control" name="prodesc"></textarea>
-                            <input class="form-control" id="pdescription" name="Description" hidden />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label class="control-label">Price</label><br />
-                                <input class="form-control" name="Price" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label class="control-label">Discounted Price</label><br />
-                                <input class="form-control" name="DiscountPrice" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label class="control-label">Rating</label><br />
-                                <input class="form-control" name="Rating" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-12">
-                        <label for="exampleFormControlInput1">Image</label>
-                        <br />
-                        <input id="ProductImage" name="PImageName" value="" hidden />
-                        <input id="imageUpload" class="ProductImageUpload form-control-file" type="file" accept="image/*" multiple required>
-                        <label id="imageuploadmsg"></label>
-                        <div id="alliamge">
-                        </div>
-                        <div class="defaultimage">
-                            <input type="text" name="imgdefault" value="" id="DefaultImage" class="form-control" style="width:65%;" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-6 text-center">
-                            <div class="border border-light rounded">
-                                <label class="control-label">Do you want to show this as a featured product? </label><br />
-                                <div class="d-flex justify-content-center">
-                                    <h3 class="pr-2 text-danger"><i class="bi bi-x-square"></i></h3>
-                                    <label class="switch">
-                                        <input type="checkbox" id="Isfeatured">
-                                        <span class="slider round" id=""></span>
-                                    </label>
-                                    <h3 class="pl-2 text-success"><i class="bi bi-check-square"></i></h3>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-6 px-3 text-center">
-                            <div class="border border-light rounded">
-                                <label class="control-label">What kind of button do you want for this Product?</label><br />
-                                <div class="d-flex justify-content-center">
-                                    <h3 class="pr-2"><i class="bi bi-bag"></i></h3>
-                                    <label class="switch mt-1">
-                                        <input type="checkbox" id="isWhatsapp">
-                                        <span class="slider round" id=""></span>
-                                    </label>
-                                    <h3 class="pl-2"><i class="bi bi-whatsapp"></i></h3>
-                                </div>
-                            </div>
+                            <label class="control-label">Price</label><br />
+                            <input class="form-control" name="Price"/>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label">Seo Tags</label><br />
-                        <input class="form-control" name="SeoTags" required />
-                    </div>
-
-                    <input readonly="readonly" id="featured" name="Isfeatured" hidden />
-                    <input readonly="readonly" id="whatsapp" name="isWhatsapp" hidden />
-
-                    <div class="d-flex">
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <button class="btn btn-default btn-outline-primary" id="ProductCreateBtn">Create</button>
-                            </div>
+                            <label class="control-label">Discounted Price</label><br />
+                            <input class="form-control" name="DiscountPrice" />
                         </div>
-                        <div class="form-group ml-3">
-                            <div class="">
-                                <a id="productbox-close" class="btn btn-default btn-outline-danger">Close</a>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="control-label">Rating</label><br />
+                            <input class="form-control" name="Rating" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label for="exampleFormControlInput1">Image</label>
+                    <br />
+                    <input id="ProductImage" name="PImageName" value="" hidden />
+                    <input id="imageUpload" class="ProductImageUpload form-control-file" type="file" accept="image/*" multiple required>
+                    <label id="imageuploadmsg"></label>
+                    <div id="alliamge">
+                    </div>
+                    <div class="defaultimage">
+                        <input type="text" name="imgdefault" value="" id="DefaultImage" class="form-control" style="width:65%;" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6 text-center">
+                        <div class="border border-light rounded">
+                            <label class="control-label">Do you want to show this as a featured product? </label><br />
+                            <div class="d-flex justify-content-center">
+                                <h3 class="pr-2 text-danger"><i class="bi bi-x-square"></i></h3>
+                                <label class="switch">
+                                    <input type="checkbox" id="Isfeatured">
+                                    <span class="slider round" id=""></span>
+                                </label>
+                                <h3 class="pl-2 text-success"><i class="bi bi-check-square"></i></h3>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+
+                    <div class="form-group col-md-6 px-3 text-center">
+                        <div class="border border-light rounded">
+                            <label class="control-label">What kind of button do you want for this Product?</label><br />
+                            <div class="d-flex justify-content-center">
+                                <h3 class="pr-2"><i class="bi bi-bag"></i></h3>
+                                <label class="switch mt-1">
+                                    <input type="checkbox" id="isWhatsapp">
+                                    <span class="slider round" id=""></span>
+                                </label>
+                                <h3 class="pl-2"><i class="bi bi-whatsapp"></i></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Seo Tags</label><br />
+                    <input class="form-control" name="SeoTags" required />
+                </div>
+
+                <input readonly="readonly" id="featured" name="Isfeatured" hidden />
+                <input readonly="readonly" id="whatsapp" name="isWhatsapp" hidden />
+
+                <div class="d-flex">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button class="btn btn-default btn-outline-primary" id="ProductCreateBtn">Create</button>
+                        </div>
+                    </div>
+                    <div class="form-group ml-3">
+                        <div class="">
+                            <a id="productbox-close" class="btn btn-default btn-outline-danger">Close</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
         </div>
     </div>
 </div>
+    
 
 
 <script src="~/Content/ckeditor/ckeditor.js"></script>
@@ -184,7 +185,7 @@
 <script>
     $(document).ready(function () {
         $("#featured").val("false");
-        CKEDITOR.replace('prodesc');
+		CKEDITOR.replace('prodesc');
     });
     $(".categoryDropDown").change(function () {
         var getvalue = $("#CategoryId").val();
@@ -239,7 +240,7 @@
     $("#ProductCreateBtn").click(function (e) {
         e.preventDefault();
         if ($("#Productcreate").valid()) {
-            var prdata = CKEDITOR.instances.prodesc.getData();
+		    var prdata = CKEDITOR.instances.prodesc.getData();
             $("#pdescription").val(prdata);
             $.ajax({
                 type: 'Post',
@@ -432,3 +433,4 @@
         $("#ptext" + count).addClass('ptag');
     }
 </script>
+

@@ -1,4 +1,4 @@
-﻿@model CcAvenueViewModel
+@model CcAvenueViewModel
 <form method="post" id="paymentForm" action="@Model.CheckoutUrl">
     <input type="hidden" id="encRequest" name="encRequest" value="@Model.EncryptionRequest" />
     <input type="hidden" id="access_code" name="access_code" value="@Model.AccessCode" />

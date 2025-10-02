@@ -1,57 +1,51 @@
 ﻿@model IEnumerable<Entities.Product>
-    @{ int imgcount = 0;}
+ @{ int imgcount = 0;}
+ 
+ <style>
 
-<style>
-    .light-pro-bg {
-        border: 5px solid var(--dark);
-        background-color: #417f343b;
-    }
-    .dark-pro-bg {
-        border: 5px solid var(--primary);
-        background-color: white;
-    }
 </style>
-
+ 
 @if (Model.Count() > 0)
 {
     foreach (var item in Model)
     {
-        imgcount = imgcount + 1;
-        var catname = CategoryService.Instance.CategoryName(item.CategoryId);
+	imgcount = imgcount + 1;
+	var catname = CategoryService.Instance.CategoryName(item.CategoryId);
         <div class="col-lg-4">
             <div class="item">
                 <div class="thumb">
                     <div class="hover-content">
                         <ul>
-                            <li><a href="@Url.Action("ProductView", "Product", new { Id = HelperService.Instance.ConvertStringToHex(item.Id.ToString(), System.Text.Encoding.Unicode), name = item.Name.Replace(' ', '-').TrimStart('-').TrimEnd('-') })"><i class="bi bi-eye"></i></a></li>
+                            <li><a href="@Url.Action("ProductView", "Product",new {Id= HelperService.Instance.ConvertStringToHex(item.Id.ToString(),System.Text.Encoding.Unicode),name=item.Name.Replace(' ','-').TrimStart('-').TrimEnd('-') })"><i class="bi bi-eye"></i></a></li>
                             @if (item.isWhatsapp == false)
                             {
-                                <li class="@("RemoveCartClassli" + item.Id) @(item.isAvailCart == true ? "" : "d-none")"><a class="@("RemoveCartClass" + item.Id) bg-danger text-white btn-cartt" id="@("RemoveCart" + item.Id)" onclick="RemoveCart('@item.Id')"><i class="bi bi-bag-x"></i></a></li>
-                                <li class="@("AddCartClassli" + item.Id) @(item.isAvailCart == true ? "d-none" : "")"><a class="@("AddCartClass" + item.Id) btn-cartt" id="@("AddCart" + item.Id)" onclick="cart('@item.Id')"><i class="bi bi-bag-plus"></i></a></li>
+                                <li class="@("RemoveCartClassli" + item.Id) @(item.isAvailCart == true ? "":"d-none")"><a class="@("RemoveCartClass" + item.Id) bg-danger text-white btn-cartt" id="@("RemoveCart" + item.Id)" onclick="RemoveCart('@item.Id')"><i class="bi bi-bag-x"></i></a></li>
+                                <li class="@("AddCartClassli" + item.Id) @(item.isAvailCart == true ? "d-none":"")"><a class="@("AddCartClass" + item.Id) btn-cartt" id="@("AddCart" + item.Id)" onclick="cart('@item.Id')"><i class="bi bi-bag-plus"></i></a></li>
 
                             }
                             else
                             {
-                                <li><a href="https://wa.me/919967060009?text=hey%0aI came across the @catname on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect? for @item.Name" target="_blank" style="cursor:pointer; color:var(--primary)"><i class="bi bi-whatsapp"></i></a></li>
+                                 <li><a href="https://wa.me/918291979797?text=hey%0aI came across the @catname on your Floral Fiesta website. I'd like to enquire more on the same. Can we connect? for @item.Name" target="_blank" style="cursor:pointer; color:var(--primary)"><i class="bi bi-whatsapp"></i></a></li>
+
                             }
                         </ul>
                     </div>
                         
-                    <img src="@item.DefaultImage" id="@imgcount" alt="@item.Name">
+                    <img id="@imgcount" src="@item.DefaultImage" alt="@item.Name">
                 </div>
                 <div class="down-content">
                     <h4>@item.Name</h4>
-                    @if (item.CategoryId != 3)
-                    {
-                        if (item.Price > 0)
+                        @if (item.CategoryId != 3)
                         {
-                            <div class="d-flex">
-                                <span>₹ @(item.DiscountPrice > 0 ? item.DiscountPrice : item.Price)</span>
-                                <span style="text-decoration: line-through;" class="ml-2 text-danger @(item.DiscountPrice > 0 ? "" : "d-none")">₹ @item.Price</span>
-                            </div>
+                            if (item.Price > 0)
+                            {
+                                <div class="d-flex">
+                                    <span>₹ @(item.DiscountPrice > 0 ? item.DiscountPrice : item.Price)</span>
+                                    <span style="text-decoration: line-through;" class="ml-2 text-danger @(item.DiscountPrice > 0 ? "" : "d-none")">₹ @item.Price</span>
+                                </div>
+                            }
                         }
-                    }
-                    <ul class="stars">
+						<ul class="stars">
                         <li><i class="@(item.Rating >= 1 ? "bi bi-star-fill":"bi bi-star")"></i></li>
                         <li><i class="@(item.Rating >= 2 ? "bi bi-star-fill":"bi bi-star")"></i></li>
                         <li><i class="@(item.Rating >= 3 ? "bi bi-star-fill":"bi bi-star")"></i></li>
@@ -71,7 +65,7 @@ else
 }
 
 <script>
-    $(document).ready(function () {
+ $(document).ready(function () {
         bg();
     });
 
@@ -85,6 +79,7 @@ else
             }
         }
     }
+
 
     function cart(id) {
         $("#Cart" + id).prop('disabled', true);

@@ -149,7 +149,8 @@
         var countPO = '@Model.Orders.Count()';
         $("#OrdersCount").html(countPO);
     });
-     $(".orderDetails").click(function () {
+	
+	$(".orderDetails").click(function () {
         var dataId = $(this).attr('data-id');
         $.ajax({
             url: '@Url.Action("OrderDetails", "Admin")',

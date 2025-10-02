@@ -1,0 +1,324 @@
+﻿@model DataModels.OrdersViewModel
+
+@{
+    ViewBag.Title = "CompleteOrdersList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="~/Scripts/jquery.multi-select.min.js"></script>
+<style>
+    .dropdown1 .checkedCheckbox {
+        background-color: rgb(231 74 59);
+        color: var(--text);
+        text-decoration: line-through;
+        padding: 8px 43px !important;
+    }
+
+    .multi-select-container {
+        display: inline-block;
+        position: relative;
+    }
+
+    .multi-select-menu {
+        position: absolute;
+        left: 0;
+        top: 0.8em;
+        z-index: 1;
+        float: left;
+        min-width: 100%;
+        background: #fff;
+        margin: 1em 0;
+        border: 1px solid #aaa;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
+
+    .multi-select-menuitem {
+        display: block;
+        font-size: 0.875em;
+        padding: 0.6em 1em 0.6em 30px;
+        white-space: nowrap;
+    }
+
+    .multi-select-menuitem--titled:before {
+        display: block;
+        font-weight: bold;
+        content: attr(data-group-title);
+        margin: 0 0 0.25em -20px;
+    }
+
+    .multi-select-menuitem--titledsr:before {
+        display: block;
+        font-weight: bold;
+        content: attr(data-group-title);
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .multi-select-menuitem + .multi-select-menuitem {
+        padding-top: 0;
+    }
+
+    .multi-select-presets {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .multi-select-menuitem input {
+        position: absolute;
+        margin-top: 0.25em;
+        margin-left: -20px;
+    }
+
+    .multi-select-button {
+        width: 100%;
+        padding: 8px 18px !important;
+        border: none;
+        border-radius: 6px;
+        outline: none !important;
+        margin-right: 10px;
+        background: #3259ca;
+        color: var(--text);
+        display: inline-block;
+        font-size: 0.875em;
+        max-width: 8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: -0.5em;
+        border-radius: 4px;
+        cursor: default;
+    }
+
+    .multi-select-button:after {
+        content: "";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0.4em 0.4em 0 0.4em;
+        border-color: #fff transparent transparent;
+        margin-left: 0.4em;
+        vertical-align: 0.1em;
+    }
+
+    .multi-select-container--open .multi-select-menu {
+        display: block;
+    }
+
+    .multi-select-container--open .multi-select-button:after {
+        border-width: 0 0.4em 0.4em 0.4em;
+        border-color: transparent transparent #fff transparent;
+    }
+
+    .multi-select-container--positioned .multi-select-menu {
+        /* Avoid border/padding on menu messing with JavaScript width calculation */
+        box-sizing: border-box;
+    }
+
+        .multi-select-container--positioned .multi-select-menu label {
+            /* Allow labels to line wrap when menu is artificially narrowed */
+            white-space: normal;
+        }
+
+    #OrderViewTable select {
+        padding: 3px 15px;
+        border-bottom: 1px solid #5a5c69;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        font-size: 13px;
+        outline: none;
+    }
+
+    #OrderStatus, #PaymentMethod, #Visibility {
+        width: 100%;
+        color: #747474;
+        padding: 6px 10px !important;
+        border: 1px solid #c7c7c7;
+        border-radius: 6px;
+        outline: none !important;
+        margin-right: 10px;
+    }
+
+    .btn {
+        padding: 2px 8px !important;
+    }
+
+    #dropdownMenuButton1 {
+        background: transparent;
+        color: #858585;
+        padding: 6px 22.5px !important;
+        border: 1px solid #c7c7c7;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    #datepicker1, #datepicker {
+        color: black;
+        padding: 6px 10px !important;
+        border: 1px solid #c7c7c7;
+        border-radius: 6px;
+        outline: none !important;
+        margin-right: 10px;
+    }
+</style>
+<div class="category-table">
+    <div class="adminpage-head">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div>
+                    <h6 class="m-0 font-weight-bold text-primary text-uppercase">Pending Orders -<label id="OrdersCount"></label> <span style="color: var(--success);"></span></h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="Filter">
+                    <div id="buttons" class="d-flex align-content-start flex-wrap">
+                        <div class="dropdown dropdown1 mr-2 mb-1">
+                            <select name="Visibility" multiple id="Visibility">
+                                <option value="1">Action</option>
+                                <option value="4">Customer</option>
+                                <option value="5">Contact</option>
+                                <option value="6">Email</option>
+                                <option value="7">Amount</option>
+                                <option value="8">Del. Charges</option>
+                                <option value="9">Total Amount</option>
+                                <option value="10">Payment Status</option>
+                                <option value="12">Order Status</option>
+                                <option value="14">Payment Method</option>
+                                <option value="15">Pincode</option>
+                                <option value="16">Shipping Address</option>
+                            </select>
+                        </div>
+                        <p style=" margin-bottom: 5px;"> <input type="text" id="datepicker" placeholder="Start Date:" autocomplete="off"></p>
+                        <p> <input type="text" id="datepicker1" placeholder="End Date:" autocomplete="off"></p>
+                        <div>
+                            <button type="button" class="reset btn btn-danger" onclick="ResetBtn();" style=" padding: 5px 20px !important; margin-bottom: 1rem;">Reset</button>
+                        </div>
+                    </div>
+                </form>
+                <hr style="margin-top: 0rem !important; border-top: 1px solid rgb(0 0 0 / 35%) !important; " />
+                <div id="porderpartial" class="table-responsive">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<script>
+    function ResetBtn() {
+        $('#Filter')[0].reset();
+        loadPOPartial();
+    }
+    $("#Visibility").change(function () {
+        $('input:checkbox').each(function () {
+            if ($(this).is(':checked'))
+                $("#" + $(this).attr('id')).parent("label").addClass("checkedCheckbox");
+            else { $("#" + $(this).attr('id')).parent("label").removeClass("checkedCheckbox") }
+        });
+        var select_button_text = $('#Visibility option:selected')
+            .toArray().map(item => item.value);
+        var table = $('#OrderViewTable').DataTable();
+        table.column(1).visible(true);
+        table.column(4).visible(true);
+        table.column(5).visible(true);
+        table.column(6).visible(true);
+        table.column(7).visible(true);
+        table.column(8).visible(true);
+        table.column(9).visible(true);
+        table.column(10).visible(true);
+        table.column(11).visible(true);
+        table.column(12).visible(true);
+        table.column(13).visible(true);
+        table.column(14).visible(true);
+        jQuery.each(select_button_text, function (i, val) {
+            table.column(val).visible(false);
+        });
+    });
+    $('#Visibility').multiSelect({
+        noneText: 'Visibility',
+        presets: [
+            {
+                name: 'Remove All',
+                all: true
+            }
+        ]
+    });
+    $(function () {
+        loadPOPartial();
+        $("#datepicker").datepicker({
+            dateFormat: "dd-mm-yy",
+            onSelect: function (d, i) {
+                var edate = $("#datepicker1").val().toString();
+                if (d !== i.lastVal) {
+                    if (edate !== null && edate !== "") {
+                        if (edate >= d) {
+                            $(this).change();
+                            loadPOPartial();
+                        }
+                        else {
+                            Swal.fire('start date is less then end date')
+                        }
+                    }
+                    else {
+                        $(this).change();
+                        loadPOPartial();
+                    }
+                }
+            }
+        });
+        $("#datepicker1").datepicker({
+            dateFormat: "dd-mm-yy",
+            onSelect: function (d, i) {
+                var sdate = $("#datepicker").val().toString();
+                if (d !== i.lastVal) {
+                    if (sdate !== null && sdate !== "") {
+                        if (sdate <= d) {
+                            $(this).change();
+                            loadPOPartial();
+                        }
+                        else {
+                            Swal.fire('end date is greater then start date')
+                        }
+                    }
+                    else {
+                        $(this).change();
+                        loadPOPartial();
+                    }
+                }
+            }
+        });
+
+    });
+    function loadPOPartial() {
+        var startDate = $("#datepicker").val().toString();
+        var endDate = $("#datepicker1").val().toString();
+         $.ajax({
+             type: "POST",
+             url: '@Url.Action("_CompleteOrdersList", "Admin")',
+             data: {
+                 StartDate: startDate,
+                 EndDate: endDate
+             }
+         })
+            .done(function (response) {
+                $("#porderpartial").html(response);
+             })
+             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                 Swal.fire({
+                     icon: 'error',
+                     title: 'Oops...',
+                     text: 'Something went wrong!',
+                 })
+         });
+    }
+</script>

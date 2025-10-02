@@ -58,7 +58,7 @@
     <div class="card shadow mb-4">
         <div class="form-horizontal">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h4>Add Product</h4>
+                <h4>Edit Product</h4>
             </div>
             <hr />
 
@@ -205,12 +205,12 @@
 </div>
 
 
-<script src="~/Content/ckeditor/ckeditor.js"></script>
 
+<script src="~/Content/ckeditor/ckeditor.js"></script>
 
 <script>
     $(document).ready(function () {
-        CKEDITOR.replace('prodesc');
+	 CKEDITOR.replace('prodesc');
         var imgDefault = '@defimg';
         var data = [];
         var inputImg = $("#ProductImage");
@@ -275,7 +275,6 @@
         var imag = img
         var defim = $("#DefaultImage").val();
         if (imag == defim) {
-            alert("true");
             $("#DefaultImage").val("");
         }
         var allimg = $("#ProductImage").val();
@@ -322,7 +321,6 @@
         inputImg.val(url);
 
         if ($("#ProductImage").val().length == 0) {
-            alert("true");
             $(".ProductImageUpload").prop('required', true);
         }
 
@@ -331,7 +329,7 @@
     $("#ProductEditBtn").click(function (e) {
         e.preventDefault();
         if ($("#Productcreate").valid()) {
-            var prdata = CKEDITOR.instances.prodesc.getData();
+		    var prdata = CKEDITOR.instances.prodesc.getData();
             $("#pdescription").val(prdata);
             $.ajax({
                 type:'Post',

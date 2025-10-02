@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    var message = Convert.ToString(TempData["ConfirmEmail"]);
+}
+
+<link href="~/Content/LoginCss.css" rel="stylesheet" />
+
+<style>
+    footer {
+        margin-top: 0;
+    }
+
+    .error {
+        color: var(--primary);
+    }
+
+    .login-box {
+        padding: 5rem 0;
+        max-width: 1500px;
+    }
+
+    .logon-wrap {
+        background-color: #ffffffcc;
+        padding: 3rem 1rem;
+        margin: 0 0.5rem;
+        border-radius: 10px;
+    }
+
+    .inbor {
+        border: 1px solid var(--dark);
+        background: #21252908;
+        color: var(--dark) !important;
+    }
+    .inbor::placeholder {
+        color: var(--dark) !important;
+    }
+</style>
+
+<div class="img" style="background-image: url(/Content/Images/login-bg.jpg);">
+    <section class="ftco-section">
+        @{ 
+            Html.RenderPartial("PartialLogin");
+        }
+    </section>
+</div>

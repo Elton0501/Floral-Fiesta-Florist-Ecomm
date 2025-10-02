@@ -1,34 +1,38 @@
 ﻿@using Services;
 @{
-    var webname = "https://floralfiesta.in/";
     var category = CategoryService.Instance.GetAllActiveCategory();
     var userCookie = UserService.Instance.GetCurrentUserLogin();
     int CartCount = 0;
-    var username = userCookie;
+	var username = userCookie;
     if (userCookie != null && userCookie != string.Empty)
     {
-        username = UserService.Instance.GetCurrentUserName(userCookie);
+	    username = UserService.Instance.GetCurrentUserName(userCookie);
         CartCount = CartService.Instance.GetUserCartCount(userCookie);
     }
     var webinfo = KeyService.Instance.keydata("BrandInfo");
     var sminfo = KeyService.Instance.keydata("SocialMedia");
-    
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-13YC2NW0QZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-13YC2NW0QZ');
+</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<meta name="google-site-verification" content="u59OAx4G_ZCS-ngDxccfG-__wnVa_ouBYgoUIBWn_IU" />
+	<meta name="p:domain_verify" content="c7bac48d7ad83b63b16e0262dd329859"/>
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
 
     <title>@ViewBag.Title</title>
-    <meta name="keywords" content="@ViewBag.Keywords" />
-    <meta name="description" content="@ViewBag.Description" />
-    <meta property="og:title" content="@ViewBag.ogTitle" />
-    <meta property="og:url" content="@webname" />
-    <meta property="og:description" content="@ViewBag.Description" />
-    <meta property="og:image" content="@(webname + ViewBag.Img)" />
 
 
     <!-- Additional CSS Files -->
@@ -69,8 +73,8 @@
             z-index: 999;
         }
 
-        .smedia {
-            font-size: 2rem;
+        .smedia{
+            font-size:2rem;
         }
 
         .log {
@@ -80,13 +84,13 @@
             .log:after {
                 display: none;
             }
-
-        .fixed-button {
+		
+		.fixed-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
             padding: 10px 15px;
-            background-color: blue;
+           background-color: blue;
             color: white;
             border: 0;
             border-radius: 5px;
@@ -96,11 +100,9 @@
         .light-btn {
             border: 1px solid var(--primary);
             transition: all 0.4s;
-            border-radius: 25px;
+            border-radius:25px;
         }
-
-
-
+  
 
         @@media (min-width: 1200px) {
             .cart-login .bi-person {
@@ -123,6 +125,13 @@
                 margin-left: 3rem;
             }
         }
+		
+		@@media (max-width: 412px) {
+			
+			.log {
+                padding-right: 5px !important;
+            }
+        }
 
         @@media (max-width: 400px) {
             .cart-login {
@@ -142,13 +151,13 @@
 <body>
 
     <!-- ***** Preloader Start ***** -->
-    @*<div id="preloader">
+   @*<div id="preloader">
             <div class="jumper">
                 <div>
                     <img src="~/Content/Images/white-logo.png" />
                 </div>
-            </div>
-        </div>*@
+            </div>*@
+        </div>
     <!-- ***** Preloader End ***** -->
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
@@ -158,7 +167,7 @@
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a href="/Home/Index" class="logo">
-                            <img src="~/Content/Images/white-logo.png">
+                            <img src="~/Content/Images/white-logo.svg">
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
@@ -168,7 +177,7 @@
                             <li class="submenu">
                                 <a href="javascript:;">Products</a>
                                 <ul>
-                                    @for (int i = 0; i < category.Count(); i++)
+                                     @for (int i = 0; i < category.Count(); i++)
                                     {
                                         if (category.ElementAtOrDefault(i).Name != "Decor")
                                         {
@@ -190,8 +199,8 @@
                                     <ul>
                                         <li class="@(userCookie != null && userCookie != string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;" href="/login">Login</a></li>
                                         <li class="@(username == null || username == string.Empty ? "d-none":"")"><a style="color: #b1adad !important; ">@username</a></li>
-                                        <li class="@(userCookie == null || userCookie == string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;" href="/logout">Logout</a></li>
-                                        <li class="@(userCookie == null || userCookie == string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;" href="@Url.Action("UserOrders","Checkout",new {Email= userCookie, Status="current"})">Your Orders</a></li>
+                                        <li class="@(userCookie == null || userCookie == string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;"  href="/logout">Logout</a></li>
+                                        <li class="@(userCookie == null || userCookie == string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;"  href="@Url.Action("UserOrders","Checkout",new {Email= userCookie, Status="current"})">Your Orders</a></li>
                                     </ul>
                                 </li>
                                 <li><a class="login-cart-icon" href="/Cart"><i class="bi bi-bag"></i></a><span id="cart-quantity" style="position: absolute; font-size: 12px;">@CartCount</span></li>
@@ -213,13 +222,13 @@
     </div>
 
     <!-- ***** Footer Start ***** -->
-    <footer id="footer">
+    <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
                     <div class="first-item">
                         <div class="logo">
-                            <img src="~/Content/Images/green-logo.png" alt="Lylac Shoppee">
+                            <img style="width:85%;" src="~/Content/Images/green-logo.svg" alt="Lylac Shoppee">
                         </div>
                         <ul>
                             <li><a href="#">@webinfo.FirstOrDefault(x => x.Name == "Address").Description</a></li>
@@ -246,7 +255,7 @@
                 <div class="col-lg-3">
                     <h4>Useful Links</h4>
                     <ul>
-                        <li><a href="/Home/Index/#cs">Homepage</a></li>
+                        <li><a href="@Url.Action("Index", "Home")">Homepage</a></li>
                         <li><a href="@Url.Action("About", "Home")">About Us</a></li>
                         <li><a href="/Home/Index/#cs">Contact Us</a></li>
                     </ul>
@@ -289,8 +298,9 @@
             </div>
         </div>
     </div>
+	
+	    <a href="https://wa.me/919967060009?text=Hey,%0aI got to know about Floral Fiesta through your website. I'd like to enquire more. Can we connect?" target="_blank" class="fixed-button light-btn all-pg-btn"><i class="bi bi-whatsapp"></i></a>
 
-    <a href="https://wa.me/919967060009?text=Hey,%0aI got to know about Floral Fiesta through your website. I'd like to enquire more. Can we connect?" target="_blank" class="fixed-button light-btn all-pg-btn"><i class="bi bi-whatsapp"></i></a>
 
     <!-- Plugins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.js"></script>
@@ -306,8 +316,8 @@
 
     <!-- Global Init -->
     <script src="~/Scripts/custom.js"></script>
-
-    <script>
+	
+	<script>
         $(".menu-trigger").click(function () {
             $(".cart-login").toggle();
         });

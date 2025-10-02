@@ -1,0 +1,486 @@
+﻿@model Entities.Product
+@{
+    var menuCat = ViewBag.CatItem;
+    var imagestring = ViewBag.PimgString;
+    var defimg = ViewBag.DefaultImage;
+}
+<style>
+    .img-pro-box {
+        width: 100%;
+        margin: 1rem;
+        border-radius: 10px;
+    }
+
+    .error {
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .img-boxx {
+        position: relative;
+    }
+
+    #img-delete {
+        position: absolute;
+        left: 10px;
+        top: 0;
+        padding: 4px 8px 2px;
+        background: white;
+        font-size: 1.3rem;
+        border-radius: 20px;
+    }
+
+    .default-img-bor {
+        border: 5px solid #898b9a;
+    }
+
+    .ptag {
+        color: white;
+        position: absolute;
+        bottom: 1%;
+        text-align: center;
+        background-color: #898b9a;
+        margin-left: 1rem;
+        padding: 0 12px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .btn-outline-danger:hover {
+        color: #fff;
+        background-color: #e74a3b !important;
+        border-color: #e74a3b !important;
+    }
+</style>
+
+
+
+<div class="adminpage-head">
+    <div class="card shadow mb-4">
+        <div class="form-horizontal">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4>Add Product</h4>
+            </div>
+            <hr />
+
+            <div class="card-body">
+                <form id="Productcreate">
+                    <input name="Id" value="@Model.Id" hidden />
+                    <input name="Rating" value="@Model.Rating" hidden/>
+                    <input name="CreatedOn" value="@Model.CreatedOn" hidden />
+                    <input name="Status" value="@Model.Status.ToString()" hidden/>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Product Name</label><br />
+                            <input class="form-control" name="Name" value="@Model.Name" required />
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-10" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CatItem, htmlAttributes: new { @class = "form-control categoryDropDown" })
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="exampleFormControlSelect1">select SubCategory</label>
+                            <select class="form-control" id="subCategoryDropDown" name="SubCategoryId">
+                                @foreach (var item in ViewBag.SubCatItem)
+                                {
+                                    <option value="@item.Value" @(item.Value == Model.SubCategoryId.ToString() ? "selected" : "")>@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="control-label">Product Description</label><br />
+                            <textarea id="prodesc" class="form-control" name="prodesc">@Model.Description</textarea>
+                            <input class="form-control" id="pdescription" name="Description" hidden />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="control-label">Price</label><br />
+                                <input class="form-control" name="Price" value="@Model.Price"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="control-label">Discounted Price</label><br />
+                                <input class="form-control" name="DiscountPrice" value="@Model.DiscountPrice"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="control-label">Rating</label><br />
+                                <input class="form-control" name="Rating" value="@Model.Rating"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="exampleFormControlInput1">Image</label>
+                        <br />
+                        <input id="ProductImage" name="PImageName" value="@imagestring" hidden/>
+                        <input value="@imagestring" id="oldimgstr" name="OldPImageName" hidden/>
+                        <input id="imageUpload" class="ProductImageUpload form-control-file" type="file" accept="image/*" multiple>
+                        <label id="imageuploadmsg"></label>
+                        <div id="alliamge">
+                        </div>
+                        <div class="defaultimage">
+
+                            <input type="text" name="imgdefault" value="@defimg" id="DefaultImage" class="form-control" style="width:65%;" hidden/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6 text-center">
+                            <div class="border border-light rounded">
+                                <label class="control-label">Do you want to show this as a featured product? </label>
+                                <div class="d-flex justify-content-center">
+                                    <h3 class="pr-2 text-danger"><i class="bi bi-x-square"></i></h3>
+                                    <label class="switch">
+                                        @{
+                                            var truefeaturedStatus = Model.Isfeatured == true ? "Checked" : string.Empty;
+                                        }
+                                        <input type="checkbox" id="Isfeatured" @truefeaturedStatus>
+                                        <span class="slider round" id=""></span>
+                                    </label>
+                                    <h3 class="pl-2 text-success"><i class="bi bi-check-square"></i></h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6 px-3 text-center">
+                            <div class="border border-light rounded">
+                                <label class="control-label">What kind of button do you want for this Product?</label><br />
+                                <div class="d-flex justify-content-center">
+                                    <h3 class="pr-2"><i class="bi bi-bag"></i></h3>
+                                    <label class="switch mt-1">
+                                        @{
+                                            var truewaStatus = Model.isWhatsapp == true ? "Checked" : string.Empty;
+                                        }
+                                        <input type="checkbox" id="isWhatsapp" @truewaStatus>
+                                        <span class="slider round" id=""></span>
+                                    </label>
+                                    <h3 class="pl-2"><i class="bi bi-whatsapp"></i></h3>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="control-label">Seo Tags</label><br />
+                            <input class="form-control" name="SeoTags" value="@Model.SeoTags" />
+                        </div>
+                    </div>
+
+
+
+                    <input readonly="readonly" id="featured" value="@Model.Isfeatured" name="Isfeatured" hidden />
+
+                    <input readonly="readonly" id="whatsapp" value="@Model.isWhatsapp" name="isWhatsapp" hidden />
+
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button class="btn btn-default btn-outline-primary" id="ProductEditBtn">Edit</button>
+                            </div>
+                        </div>
+                        <div class="form-group ml-3">
+                            <div class="">
+                                <a id="productbox-close" class="btn btn-default btn-outline-danger">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace('prodesc');
+        var imgDefault = '@defimg';
+        var data = [];
+        var inputImg = $("#ProductImage");
+        var oldValue = "";
+        if (inputImg.val().length > 0) {
+            var strImg = inputImg.val();
+            var arrayString = strImg.split(',');
+            $.each(arrayString, function (i, value) {
+                data.push({ Image: value });
+            });
+            oldValue = inputImg.val() + ",";
+        }
+
+        var saveimg = [];
+        var imagedata = '<div class=\"ProImages row\">';
+        for (var i = 0; i < data.length; i++) {
+            imagedata = imagedata + '<div class=\"col-md-3 img-boxx\"> <img src=' + data[i].Image + ' onclick="defaultimg(' + i + ')" alt=\"Image\" id=\"' + i + '\" class="' + (data[i].Image == imgDefault ? "default-img-bor" : "")  +' img-pro-box">' +
+                '<button type=\"button\" class=\"btn btn-default btn-outline-danger\" onclick="imgdel(' + "'" + data[i].Image + "'" + ')" id=\"img-delete\"><i class=\"bi bi-x\"></i></button>' +
+                '<p class="phide ' + (data[i].Image == imgDefault ? "ptag" : "") + '" id=\"ptext' + i + '\">' + (data[i].Image == imgDefault ? "Default Image" : "") +'</p></div>';
+            saveimg.push(data[i].Image);
+
+        }
+        imagedata = imagedata + '</div>';
+        $("#alliamge").show();
+        $("#alliamge").html(imagedata);
+        var url = saveimg.join(",");
+        console.log(data);
+
+        inputImg.val(url);
+        //getSubCategory();
+    });
+
+    $('#Productcreate').validate({
+        rules: {
+            Name: {
+                required: true,
+            },
+            Description: {
+                required: true,
+            },
+            SeoTags: {
+                required: true,
+            },
+        },
+        messages: {
+            Name: {
+                required: '* Product Name is required',
+            },
+            Description: {
+                required: '* Product Description is required',
+            },
+            SeoTags: {
+                required: '* Product Seo Tag Value is required',
+            },
+        }
+    });
+
+
+
+    function imgdel(img) {
+        var imgDefault = '@defimg';
+        var imag = img
+        var defim = $("#DefaultImage").val();
+        if (imag == defim) {
+            alert("true");
+            $("#DefaultImage").val("");
+        }
+        var allimg = $("#ProductImage").val();
+        var success = allimg.replace(imag, '');
+        var di = ",,";
+        if (success.indexOf(di) != -1) {
+            success = success.replace(di, ',');
+        }
+        else if (success.startsWith(",")) {
+            success = success.slice(1);
+        }
+        else if (success.endsWith(",")) {
+            success = success.substring(0, success.length - 1);
+        }
+        $("#ProductImage").val(success);
+
+        var data = [];
+        var inputImg = $("#ProductImage");
+        var oldValue = "";
+        if (inputImg.val().length > 0) {
+            var strImg = inputImg.val();
+            var arrayString = strImg.split(',');
+            $.each(arrayString, function (i, value) {
+                data.push({ Image: value });
+            });
+            oldValue = inputImg.val() + ",";
+        }
+
+        var saveimg = [];
+        var imagedata = '<div class=\"ProImages row\">';
+        for (var i = 0; i < data.length; i++) {
+            imagedata = imagedata + '<div class=\"col-md-3 img-boxx\"> <img src=' + data[i].Image + ' onclick="defaultimg(' + i + ')" alt=\"Image\" id=\"' + i + '\" class="' + (data[i].Image == imgDefault ? "default-img-bor" : "") + ' img-pro-box">' +
+                '<button type=\"button\" class=\"btn btn-default btn-outline-danger\" onclick="imgdel(' + "'" + data[i].Image + "'" + ')" id=\"img-delete\"><i class=\"bi bi-x\"></i></button>' +
+                '<p class="phide ' + (data[i].Image == imgDefault ? "ptag" : "") + '" id=\"ptext' + i + '\">' + (data[i].Image == imgDefault ? "Default Image" : "") + '</p></div>';
+           saveimg.push(data[i].Image);
+
+        }
+        imagedata = imagedata + '</div>';
+        $("#alliamge").show();
+        $("#alliamge").html(imagedata);
+        var url = saveimg.join(",");
+        console.log(data);
+
+        inputImg.val(url);
+
+        if ($("#ProductImage").val().length == 0) {
+            alert("true");
+            $(".ProductImageUpload").prop('required', true);
+        }
+
+    }
+
+    $("#ProductEditBtn").click(function (e) {
+        e.preventDefault();
+        if ($("#Productcreate").valid()) {
+            var prdata = CKEDITOR.instances.prodesc.getData();
+            $("#pdescription").val(prdata);
+            $.ajax({
+                type:'Post',
+                url: '@Url.Action("ProductEdit", "Admin")',
+                data: $("#Productcreate").serialize(),
+            })
+                .done(function (response) {
+                    if (response == "true") {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product edited Successfully',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    setTimeout(function () {// wait for 5 secs(2)
+                        window.location.reload(); // then reload the page.(3)
+                    }, 1550);
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+            });
+        }
+    });
+
+    $("#productbox-close").click(function () {
+        $("#product-add-container").hide();
+
+    });
+
+    $('#Isfeatured').change(function () {
+        if (this.checked) {
+            $("#featured").val("true");
+        }
+        else { $("#featured").val("false"); }
+
+    });
+
+    $('#isWhatsapp').change(function () {
+        if (this.checked) {
+            $("#whatsapp").val("true");
+        }
+        else { $("#whatsapp").val("false"); }
+
+    });
+</script>
+
+<script>
+    $("#imageUpload").change(function () {
+        var element = this;
+        var formData = new FormData();
+        var totlaFiles = element.files.length;
+        for (var i = 0; i < totlaFiles; i++) {
+            var file = element.files[i];
+            formData.append("Photo", file);
+            console.log(formData);
+        }
+        $ .ajax({
+                type: 'POST',
+                url: '@Url.Action("MultipleUploadImageDefault", "Image")',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false
+            })
+            .done(function (response) {
+                if (response != null) {
+                    var data = JSON.parse(response);
+                    var inputImg = $("#ProductImage");
+                    var oldValue = "";
+                    if (inputImg.val().length > 0) {
+                        var strImg = inputImg.val();
+                        var arrayString = strImg.split(',');
+                        $.each(arrayString, function (i, value) {
+                            data.push({ Image: value });
+                        });
+                        oldValue = inputImg.val() + ",";
+                    }
+
+                    var saveimg = [];
+                    var imagedata = '<div class=\"ProImages row\">';
+                    for (var i = 0; i < data.length; i++) {
+                        imagedata = imagedata + '<div class=\"col-md-3 img-boxx\"> <img src=' + data[i].Image + ' onclick="defaultimg(' + i + ')" alt=\"Image\" id=\"' + i + '\" class=\"img-pro-box\">' +
+                            '<button type=\"button\" class=\"btn btn-default btn-outline-danger\" onclick="imgdel(' + "'" + data[i].Image + "'" + ')" id=\"img-delete\"><i class=\"bi bi-x\"></i></button>' +
+                            '<p class=\"phide\" id=\"ptext' + i + '\"></p></div>';
+                        saveimg.push(data[i].Image);
+                    }
+                    imagedata = imagedata + '</div>';
+                    $("#alliamge").show();
+                    $("#alliamge").html(imagedata);
+                    var url = saveimg.join(",");
+                    console.log(data);
+
+                    inputImg.val(url);
+                }
+                else {
+                    $('.loadermodel').hide();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                    })
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                $('.loadermodel').hide();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                })
+            });
+    });
+
+    function defaultimg(count) {
+        $("#" + count).addClass('default-img-bor');
+        var id = $("#" + count).attr("src");
+        $("#DefaultImage").val(id);
+        $(".phide").html("");
+        $("#ptext" + count).html("Default Img");
+        $(".phide").removeClass('ptag');
+        $("#ptext" + count).addClass('ptag');
+    }
+    $(".categoryDropDown").change(function () {
+        getSubCategory();
+    });
+    function getSubCategory() {
+        var getvalue = $("#CategoryId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Admin/GetSubCategories",
+            dataType: 'json',
+            data: {
+                CatId: getvalue,
+            },
+            success: function (response) {
+                var data = JSON.parse(response);
+                var s = '<option value="-1">Select Sub Category</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].Id + '">' + data[i].Name + '</option>';
+                }
+                $("#subCategoryDropDown").html(s);
+            }
+        });
+    }
+</script>
+

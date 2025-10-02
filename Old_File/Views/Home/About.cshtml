@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "About";
+    var sminfo = Services.KeyService.Instance.keydata("SocialMedia");
+}
+
+<!-- ***** Main Banner Area Start ***** -->
+<div class="page-heading about-page-heading" id="top">
+    <div class="container d-none">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="inner-content">
+                    <h2>About Our Company</h2>
+                    <span>Awesome, clean &amp; creative HTML5 Template</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** Main Banner Area End ***** -->
+<!-- ***** About Area Starts ***** -->
+<div class="about-us">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="left-image">
+                    <img src="~/Content/Images/about-us-left-image.jpg" alt="">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="right-content">
+                    <h4>About Us</h4>
+                    <p>
+                        Who doesn't like to be reminded that they are loved, valued and appreciated?
+                        However, our lives are busier than ever and no one wishes to deal with hassles like selecting a gift.
+                    </p>
+                    <p>
+                        We at Lilac Shoppe are your one-stop solution for all your gifting needs. 
+                    </p>
+                    <p>
+                        Redefining traditions and creating memories is our forte for we vouch to make your gifting journey not only easier but a memorable experience.
+                    </p>
+                    <ul>
+                        @foreach (var item in sminfo)
+                        {
+                            <li><a href="@item.Name"><i class="@item.Description"></i></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** About Area Ends ***** -->
+<!-- ***** Services Area Starts ***** -->
+<section class="our-services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h5>With a sparkle of personal touch, we make your hampers and gifts special and unique.</h5>
+                    <span class="about-section-span">
+                        All we need are answers to these four questions.
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-item">
+                    <h4> Personality</h4>
+                    <p>
+                        A person's personality is like a window into their heart. Provide us with a few words with which you'd describe them and voilà we'll make just the perfect gift for them.
+                    </p>
+                    <h1><i class="bi bi-person-bounding-box"></i></h1>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-item">
+                    <h4>Color Palette</h4>
+                    <p>
+                        Colors are extremely crucial for us to create your perfect gift according to your preferences.<br />
+                    </p>
+                    <h1><i class="bi bi-palette"></i></h1>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-item">
+                    <h4>Occasion </h4>
+                    <p>
+                        Be it birthdays, anniversaries, housewarming parties, baby showers wedding receptions, or even any special occasion we offer gifting solutions for any event of your choice.
+                    </p>
+                    <h1><i class="bi bi-calendar2-week"></i></h1>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-item">
+                    <h4>Budget </h4>
+                    <p>
+                        Last but not least, money matters. Budget forms a vital part of this process as it would help us deliver the best we can in the best price range possible as we smile only when you smile with satisfaction.
+                    </p>
+                    <h1><i class="bi bi-wallet2"></i></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Services Area Ends ***** -->
+<!-- ***** Subscribe Area Starts ***** -->
+@Html.Partial("NewsletterPartial")
+<!-- ***** Subscribe Area Ends ***** -->

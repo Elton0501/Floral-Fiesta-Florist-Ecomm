@@ -1,0 +1,264 @@
+﻿@model IEnumerable<Entities.SubCategory>
+@{
+
+    var dataId = Convert.ToInt32(TempData["CatId"]);
+    var catname = CategoryService.Instance.Category(dataId);
+    ViewBag.Title = catname.Name;
+}
+
+<style>
+    #toasts {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        align-items: flex-end;
+        z-index: 9999;
+        background: white;
+    }
+
+    #ProductsView {
+        border-bottom: 1px dotted var(--primary);
+    }
+    .hover-cart{
+        cursor: pointer !important;
+    }
+
+    .btn-cartt {
+        cursor: pointer;
+        transition: all 0.4s;
+    }
+
+    .toast {
+        border-radius: 5px;
+        padding: 0.1rem 1rem;
+        margin: .5rem;
+        opacity: 1;
+        border: none;
+        box-shadow: none;
+    }
+    .productlist .search-container button {
+        padding: 5px 9px;
+        margin-top: 12px;
+        margin-right: 1px;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        margin-left: -41px;
+        background: var(--primary);
+        border-radius: 63px;
+        color: var(--text);
+    }
+
+
+    .productlist input[type=search] {
+        padding: 8.5px 25px !important;
+        margin-top: 8px;
+        font-size: 17px;
+        border-radius: 21px;
+        border: 1px solid var(--dark);
+        width: 45%;
+        position: relative;
+        outline: none;
+    }
+
+    .tile {
+        width: 80%;
+        margin: 60px auto;
+    }
+
+    #tile-1 .tab-pane {
+        padding: 15px;
+        height: 80px;
+    }
+
+    #tile-1 .nav-tabs {
+        position: relative;
+        border: none !important;
+        background-color: #fff;
+        /*   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2); */
+        border-radius: 6px;
+    }
+
+        #tile-1 .nav-tabs li {
+            margin: 0px !important;
+        }
+
+            #tile-1 .nav-tabs li a {
+                position: relative;
+                margin-right: 0px !important;
+                padding: 20px 40px !important;
+                font-size: 16px;
+                border: none !important;
+                color: #333;
+            }
+
+        #tile-1 .nav-tabs a:hover {
+            background-color: #fff !important;
+            border: none;
+        }
+
+    #tile-1 .slider {
+        display: inline-block;
+        width: 30px;
+        height: 4px;
+        border-radius: 3px;
+        background-color: #2a2a2a;
+        position: absolute;
+        z-index:99;
+        bottom: 0;
+        transition: all .4s linear;
+    }
+
+    #tile-1 .nav-tabs .active {
+        background-color: transparent !important;
+        border: none !important;
+        color: #2a2a2a !important;
+    }
+
+    .products-h2{
+        color:var(--dark) !important;
+    }
+
+    .products-span {
+        color: var(--primary) !important;
+        opacity:0.6;
+    }
+
+    @@media (max-width : 500px) {
+        .productlist input[type=search]{
+            width:85%;
+        }
+    }
+</style>
+
+<!-- ***** Main Banner Area Start ***** -->
+<div class="page-heading" id="top" style=" background-image: url(../Content/Images/products-page-heading.jpg);">
+    <div class="container d-none">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="inner-content">
+                    <h2>Check Our Products</h2>
+                    <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** Main Banner Area End ***** -->
+<!-- ***** Products Area Starts ***** -->
+<section class="section" id="products">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h2 class="products-h2">@catname.Name</h2>
+                    <span class="products-span">@catname.Description</span>
+                </div>
+                <hr>
+                <div class="productlist">
+                    <div class="search-container text-center mb-4">
+                        <input type="search" id="searchtxt" class="productlist" name="SearchValue" value="" placeholder="Search product" />
+                        <button type="button" id="search"><i class="bi bi-search"></i></button>
+                    </div>
+                    @if (Model.Count() > 0)
+                    {
+                        <div class="tile d-none" id="tile-1">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs nav-justified" role="tablist">
+                                <div class="slider"></div>
+                                <li class="nav-item">
+                                    <a class="nav-link active" onclick="subCatTab(0, '@Model.FirstOrDefault().CategoryId')" id="home-tab" data-toggle="tab" href="#current" role="tab" aria-controls="home" aria-selected="true">All</a>
+                                </li>
+                                @foreach (var item in Model)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link active" onclick="subCatTab('@item.Id', '@item.CategoryId')" id="@("hometab" + item.Id)" data-toggle="tab" href="#current" role="tab" aria-controls="home" aria-selected="true">@item.Name</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row" id="ProductsView">
+
+            @*<div class="col-lg-12">
+                <div class="pagination">
+                    <ul>
+                        <li>
+                            <a href="#">1</a>
+                        </li>
+                        <li class="active">
+                            <a href="#">2</a>
+                        </li>
+                        <li>
+                            <a href="#">3</a>
+                        </li>
+                        <li>
+                            <a href="#">4</a>
+                        </li>
+                        <li>
+                            <a href="#">></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</section>
+
+<!-- ***** Products Area Ends ***** -->
+<input hidden value="" id="subCatId"/>
+<script>
+    $(Document).ready(function () {
+        var proCatId = '@dataId';
+        var subCatId = $("#subCatId").val();
+        var searchtxt = $("#searchtxt").val();
+        loadProducts(proCatId, searchtxt, subCatId);        
+    });
+    $("#search").click(function () {
+        var proCatId = '@dataId';
+        var search = $("#searchtxt").val();
+        var subCatId = $("#subCatId").val();
+        if (search.length > 0) {
+            loadProducts(proCatId, search, subCatId);
+        }
+
+    });
+    function subCatTab(id, catId) {
+        $("#subCatId").val(id);
+        var searchtxt = $("#searchtxt").val();
+        loadProducts(catId, searchtxt,id);
+    }
+    function loadProducts(Id,search,subCatId) {
+        $.ajax({
+            url: '/Product/ProductsPartial',
+            data: {
+                CatId: Id,
+                Search: search,
+                subCatId: subCatId,
+            },
+            success: function (response) {
+                $("#ProductsView").html(response);
+                bg();
+            },
+            error: function (response) {
+                alert("Something went wrong");
+            }
+        });
+
+    }
+    $("#tile-1 .nav-tabs a").click(function () {
+        var position = $(this).parent().position();
+        var width = $(this).parent().width();
+        $("#tile-1 .slider").css({ "left": + position.left, "width": width });
+    });
+    var actWidth = $("#tile-1 .nav-tabs").find(".active").parent("li").width();
+    var actPosition = $("#tile-1 .nav-tabs .active").position();
+    $("#tile-1 .slider").css({ "left": + actPosition.left, "width": actWidth });
+</script>

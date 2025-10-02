@@ -1,0 +1,317 @@
+﻿@using Services;
+@{
+    var webname = "https://floralfiesta.in/";
+    var category = CategoryService.Instance.GetAllActiveCategory();
+    var userCookie = UserService.Instance.GetCurrentUserLogin();
+    int CartCount = 0;
+    var username = userCookie;
+    if (userCookie != null && userCookie != string.Empty)
+    {
+        username = UserService.Instance.GetCurrentUserName(userCookie);
+        CartCount = CartService.Instance.GetUserCartCount(userCookie);
+    }
+    var webinfo = KeyService.Instance.keydata("BrandInfo");
+    var sminfo = KeyService.Instance.keydata("SocialMedia");
+    
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="@ViewBag.Keywords" />
+    <meta name="description" content="@ViewBag.Description" />
+    <meta property="og:title" content="@ViewBag.ogTitle" />
+    <meta property="og:url" content="@webname" />
+    <meta property="og:description" content="@ViewBag.Description" />
+    <meta property="og:image" content="@(webname + ViewBag.Img)" />
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/fontawesome.min.css">
+
+    <link rel="stylesheet" href="~/Content/templatemo-hexashop.css">
+
+    <link href="~/Content/style.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="~/Content/lightbox.css">
+
+
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/Scripts/popper.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <style>
+
+        .cart-login {
+            font-size: 1.3rem;
+            float: right;
+            margin-top: 30px;
+            margin-right: 0px;
+            background-color: transparent;
+            -webkit-transition: all 0.3s ease 0s;
+            -moz-transition: all 0.3s ease 0s;
+            -o-transition: all 0.3s ease 0s;
+            transition: all 0.3s ease 0s;
+            position: relative;
+            z-index: 999;
+        }
+
+        .smedia {
+            font-size: 2rem;
+        }
+
+        .log {
+            padding-right: 10px !important;
+        }
+
+            .log:after {
+                display: none;
+            }
+
+        .fixed-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: blue;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .light-btn {
+            border: 1px solid var(--primary);
+            transition: all 0.4s;
+            border-radius: 25px;
+        }
+
+
+
+
+        @@media (min-width: 1200px) {
+            .cart-login .bi-person {
+                padding-right: 0.5rem;
+            }
+        }
+
+        @@media (max-width: 550px) {
+            .cart-login {
+                font-size: 1.5rem;
+                float: left;
+                margin-left: 11rem;
+            }
+        }
+
+        @@media (max-width: 500px) {
+            .cart-login {
+                font-size: 1.5rem;
+                float: left;
+                margin-left: 3rem;
+            }
+        }
+
+        @@media (max-width: 400px) {
+            .cart-login {
+                margin-left: 2.5rem;
+            }
+        }
+
+        @@media (max-width: 375px) {
+            .cart-login {
+                margin-left: 1rem;
+            }
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <!-- ***** Preloader Start ***** -->
+    @*<div id="preloader">
+            <div class="jumper">
+                <div>
+                    <img src="~/Content/Images/white-logo.png" />
+                </div>
+            </div>
+        </div>*@
+    <!-- ***** Preloader End ***** -->
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="/Home/Index" class="logo">
+                            <img src="~/Content/Images/white-logo.png">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="@Url.Action("Index", "Home")">Home</a></li>
+                            <li class="scroll-to-section"><a href="@Url.Action("About", "Home")">About Us</a></li>
+                            <li class="submenu">
+                                <a href="javascript:;">Products</a>
+                                <ul>
+                                    @for (int i = 0; i < category.Count(); i++)
+                                    {
+                                        if (category.ElementAtOrDefault(i).Name != "Decor")
+                                        {
+                                            <li><a style="color: var(--primary) !important;" href="@Url.Action("Products", "Product", new { catId = HelperService.Instance.ConvertStringToHex(category.ElementAtOrDefault(i).Id.ToString(),System.Text.Encoding.Unicode), category = category.ElementAtOrDefault(i).Name.Replace(' ','-').TrimStart('-').TrimEnd('-') })">@category.ElementAtOrDefault(i).Name</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a style="color: var(--primary) !important;" href="@Url.Action("Decor", "Product")">@category.ElementAtOrDefault(i).Name</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                            <li class="scroll-to-section"><a href="/Home/Index/#cs">Contact Us</a></li>
+                        </ul>
+                        <div class="cart-login">
+                            <ul class="d-flex">
+                                <li class="submenu log">
+                                    <a class="login-cart-icon" href="javascript:;"><i class="bi bi-person"></i></a>
+                                    <ul>
+                                        <li class="@(userCookie != null && userCookie != string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;" href="/login">Login</a></li>
+                                        <li class="@(username == null || username == string.Empty ? "d-none":"")"><a style="color: #b1adad !important; ">@username</a></li>
+                                        <li class="@(userCookie == null || userCookie == string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;" href="/logout">Logout</a></li>
+                                        <li class="@(userCookie == null || userCookie == string.Empty ? "d-none":"")"><a style="color: var(--primary) !important;" href="@Url.Action("UserOrders","Checkout",new {Email= userCookie, Status="current"})">Your Orders</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="login-cart-icon" href="/Cart"><i class="bi bi-bag"></i></a><span id="cart-quantity" style="position: absolute; font-size: 12px;">@CartCount</span></li>
+                            </ul>
+                        </div>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+    <div id="toasts"></div>
+    <div class="render-body">
+        @RenderBody()
+    </div>
+
+    <!-- ***** Footer Start ***** -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <img src="~/Content/Images/green-logo.png" alt="Lylac Shoppee">
+                        </div>
+                        <ul>
+                            <li><a href="#">@webinfo.FirstOrDefault(x => x.Name == "Address").Description</a></li>
+                            <li><a href="mailto:@webinfo.FirstOrDefault(x=>x.Name == "Email").Description">@webinfo.FirstOrDefault(x => x.Name == "Email").Description</a></li>
+                            <li><a href="#">@webinfo.FirstOrDefault(x => x.Name == "Contact").Description</a></li>
+                            <li>
+                                @foreach (var item in sminfo)
+                                {
+                                    <a class="smedia" href="@item.Name"><i class="@item.Description "></i></a>
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Shopping &amp; Categories</h4>
+                    <ul>
+                        @for (int i = 0; i < category.Count(); i++)
+                        {
+                            <li><a href="@Url.Action("Products", "Product", new { catId = HelperService.Instance.ConvertStringToHex(category.ElementAtOrDefault(i).Id.ToString(),System.Text.Encoding.Unicode), category = category.ElementAtOrDefault(i).Name.Replace(' ','-').TrimStart('-').TrimEnd('-') })">@category.ElementAtOrDefault(i).Name</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a href="/Home/Index/#cs">Homepage</a></li>
+                        <li><a href="@Url.Action("About", "Home")">About Us</a></li>
+                        <li><a href="/Home/Index/#cs">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="@Url.Action("Terms", "Information")">Terms & Conditions</a></li>
+                        <li><a href="@Url.Action("Returns", "Information")">Return & Refunds </a></li>
+                        <li><a href="@Url.Action("Privacy", "Information")">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-12">
+                    <div class="under-footer">
+                        <p>
+                            Copyright © 2022 Lylac Shoppee Co., Ltd. All Rights Reserved.
+
+                            <br>Design: <a href="https://templatemo.com" target="_parent" title="free css templates">TemplateMo</a>
+
+                            <br>Distributed By: <a href="https://themewagon.com" target="_blank" title="free & premium responsive templates">ThemeWagon</a>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    @*Modal*@
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body loginPartial">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/919967060009?text=Hey,%0aI got to know about Floral Fiesta through your website. I'd like to enquire more. Can we connect?" target="_blank" class="fixed-button light-btn all-pg-btn"><i class="bi bi-whatsapp"></i></a>
+
+    <!-- Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.js"></script>
+    <script src="~/Scripts/accordions.js"></script>
+    <script src="~/Scripts/datepicker.js"></script>
+    <script src="~/Scripts/scrollreveal.min.js"></script>
+    <script src="~/Scripts/waypoints.min.js"></script>
+    <script src="~/Scripts/jquery.counterup.min.js"></script>
+    <script src="~/Scripts/imgfix.min.js"></script>
+    <script src="~/Scripts/slick.js"></script>
+    <script src="~/Scripts/lightbox.js"></script>
+    <script src="~/Scripts/isotope.js"></script>
+
+    <!-- Global Init -->
+    <script src="~/Scripts/custom.js"></script>
+
+    <script>
+        $(".menu-trigger").click(function () {
+            $(".cart-login").toggle();
+        });
+    </script>
+
+</body>
+</html>

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.NetworkInformation;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.Hosting;
@@ -25,6 +27,12 @@ namespace Web.Controllers
     [AdminAuthorizationFilterAttribute]
     public class AdminController : Controller
     {
+        private string cs;
+        public AdminController()
+        {
+            cs = ConfigurationManager.ConnectionStrings["SVIDB"].ConnectionString;
+        }
+
         // GET: Admin
         #region Dashboard
         public ActionResult Index()
@@ -405,12 +413,96 @@ namespace Web.Controllers
         #region Product
         public ActionResult Product()
         {
-            using (var context = new SVIContext())
-            {
-                var product = context.Products.Include(x => x.ProductImages).Include(x=>x.SubCategory).OrderByDescending(x => x.Id).ToList();
-                return View(product);
-            }
+            return View();
+            //using (var context = new SVIContext())
+            //{
+            //    var product = context.Products.Include(x => x.ProductImages).Include(x=>x.SubCategory).OrderByDescending(x => x.Id).ToList();
+            //    return View(product);
+            //}
         }
+        [HttpPost]
+        public ActionResult ProductList(int draw, int start, int length, int dropdownId)
+        {
+            var data = new List<Product>();
+            int totalFilterdRecord = 0;
+            int totalRecord = 0;
+
+            try
+            {
+                string sortColumnIndex = Request.Form.GetValues("order[0][column]")?.FirstOrDefault();
+                string sortColumnDirection = Request.Form.GetValues("order[0][dir]")?.FirstOrDefault()?.ToUpper();
+
+                sortColumnIndex = sortColumnIndex != null ? sortColumnIndex : "0";
+                sortColumnDirection = sortColumnDirection != null ? (sortColumnDirection == "ASC" ? "ASC" : "DESC") : "DESC";
+
+                string searchValue = Request.Form.GetValues("search[value]")?.FirstOrDefault();
+
+                using (var conn = new SqlConnection(cs))
+                {
+                    using (var cmd = new SqlCommand("jeetn.FilterProducts", conn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Start", start);
+                        cmd.Parameters.AddWithValue("@Length", length);
+                        cmd.Parameters.AddWithValue("@SearchValue", !string.IsNullOrEmpty(searchValue) ? searchValue.Trim() : "");
+                        cmd.Parameters.AddWithValue("@SortColumnIndex", Convert.ToInt32(sortColumnIndex));
+                        cmd.Parameters.AddWithValue("@SortDirection", sortColumnDirection);
+                        cmd.Parameters.AddWithValue("@StatusType", dropdownId);
+                        conn.Open();
+                        using (var sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                data.Add(new Product
+                                {
+                                    Id = Convert.ToInt32(sdr["Id"]),
+                                    Name = sdr["Name"].ToString(),
+                                    DefaultImage = sdr["Image"] != DBNull.Value ? sdr["Image"].ToString() : null,
+                                    SubCategoryName = sdr["SubCategoryName"] != DBNull.Value ? sdr["SubCategoryName"].ToString() : null,
+                                    CreatedOn = Convert.ToDateTime(sdr["CreatedOn"]),
+                                    Isfeatured = Convert.ToBoolean(sdr["Isfeatured"]),
+                                    isWhatsapp = Convert.ToBoolean(sdr["isWhatsapp"]),
+                                    Status = Convert.ToBoolean(sdr["Status"]),
+                                    SeoTags = sdr["SeoTags"] != DBNull.Value ? sdr["SeoTags"].ToString() : null,
+                                    Rating = sdr["Rating"] != DBNull.Value ? (int?)Convert.ToInt32(sdr["Rating"]) : null,
+                                    CreatedOnString = Convert.ToDateTime(sdr["CreatedOn"]).ToString("dd MMM yyyy"),
+                                });
+                            }
+
+                            if (sdr.NextResult())
+                            {
+                                if (sdr.Read())
+                                {
+                                    totalFilterdRecord = sdr.IsDBNull(0) ? 0 : sdr.GetInt32(0);
+                                }
+                            }
+                            
+                            if (sdr.NextResult())
+                            {
+                                if (sdr.Read())
+                                {
+                                    totalRecord = sdr.IsDBNull(0) ? 0 : sdr.GetInt32(0);
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            var result = new
+            {
+                draw,
+                recordsTotal = totalRecord,
+                recordsFiltered = totalFilterdRecord,
+                data = data
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ProductStatus(int proId, bool status)
         {
             var result = false;
@@ -419,7 +511,7 @@ namespace Web.Controllers
                 using (var context = new SVIContext())
                 {
                     var product = context.Products.FirstOrDefault(x => x.Id == proId);
-                    product.Status = status;
+                    product.Status = product.Status ? false: true;
                     context.Entry(product).State = EntityState.Modified;
                     context.SaveChanges();
                     result = true;
