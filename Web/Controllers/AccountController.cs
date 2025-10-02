@@ -1,11 +1,17 @@
 ﻿using DataModels;
 using Entities;
+using Microsoft.IdentityModel.Tokens;
 using Services;
 using SV.Database;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Hosting;
 using System.Web.Mvc;
 
@@ -115,7 +121,18 @@ namespace Web.Controllers
                     }
                     if (result.Value2 == "Admin")
                     {
-                        Session["Admin"] = Email;
+                        //Session["Admin"] = Email;
+                        //Url = "/Admin/Index";
+
+                        var token = GenerateJwtToken(result.Value1);
+                        // Store JWT in cookie (HttpOnly)
+                        var cookie = new HttpCookie("AdminToken", token)
+                        {
+                            HttpOnly = true,
+                            Expires = DateTime.Now.AddHours(2),
+                            Secure = Request.IsSecureConnection
+                        };
+                        Response.Cookies.Add(cookie);
                         Url = "/Admin/Index";
                     }
                     else
@@ -199,8 +216,11 @@ namespace Web.Controllers
         {
             try
             {
-                Session.Remove("Admin");
-                return RedirectPermanent("/Home/Index");
+                //Session.Remove("Admin");
+                //return RedirectPermanent("/Home/Index");
+                HttpCookie jwtCookie = Request.Cookies["AdminToken"];
+                Response.Cookies["AdminToken"].Expires = DateTime.Now.AddDays(-1);
+                return RedirectToAction("Login", "Account");
             }
             catch (Exception)
             {
@@ -232,6 +252,28 @@ namespace Web.Controllers
                 }
             }
             return Json(new { result = Result, msg = Messsage });
+        }
+
+        private string GenerateJwtToken(string adminUsername)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSettings["config:JwtKey"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.Name, adminUsername),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
+
+            var token = new JwtSecurityToken(
+                issuer: Convert.ToString(ConfigurationManager.AppSettings["config:JwtIssuer"]),
+                audience: Convert.ToString(ConfigurationManager.AppSettings["config:JwtAudience"]),
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

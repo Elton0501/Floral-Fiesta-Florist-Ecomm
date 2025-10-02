@@ -1,5 +1,5 @@
 ﻿@{ 
-    var user = Context.Session["Admin"];
+    //var user = Context.Session["Admin"];
     var webinfo = Services.KeyService.Instance.keydata("BrandName");
 }
 
@@ -222,14 +222,14 @@
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
-        <li class="nav-item dropdown no-arrow">
+        <!--<li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-lg-inline text-gray-600 small">@(user != null?user.ToString():"")</span>
-            </a>
+                <span class="mr-2 d-lg-inline text-gray-600 small"></span>
+            </a>-->
             <!-- Dropdown - User Information -->
-        </li>
-        <li class="nav-item dropdown no-arrow align-self-center" @(user == null ? "hidden" : "" )>
+        <!--</li>-->
+        <li class="nav-item dropdown no-arrow align-self-center">
             <a class="btn btn-primary loginbtn" href="/Account/AdminLogout">
                 Logout
             </a>

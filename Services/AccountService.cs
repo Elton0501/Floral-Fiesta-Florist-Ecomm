@@ -81,7 +81,9 @@ namespace Services
                 else
                 {
                     result.Result = true;
+                    result.Value1 = data.Name.ToString();
                 }
+
                 if(data != null && data.RoleId == adminRole.RoleId)
                 {
                     result.Value2 = "Admin";
