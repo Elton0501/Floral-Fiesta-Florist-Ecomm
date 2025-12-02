@@ -95,6 +95,10 @@ namespace Services
                 {
                     data = data.Where(x=>x.SubCategoryId == subCatId).ToList();
                 }
+                if(data != null)
+                {
+                    data = data.OrderByDescending(x => x.Id).ToList();
+                }
                 return data;
             }
         }

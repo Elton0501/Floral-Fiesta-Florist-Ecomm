@@ -95,7 +95,7 @@ namespace Web.Controllers
         public ActionResult Login(string url, string msg)
         {
             TempData["ConfirmEmail"] = msg;
-            ViewBag.Url = url;
+            ViewBag.Url = !string.IsNullOrEmpty(url) ? url : null;
             return View();
         }
         public ActionResult PartialLogin(string url, string msg)
@@ -110,6 +110,14 @@ namespace Web.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(Url))
+                    Url = "/";
+                if (string.IsNullOrEmpty(Email))
+                    return Json(new { result = false, msg = "Email is required" });
+
+                if (string.IsNullOrEmpty(Password))
+                    return Json(new { result = false, msg = "Password is required" });
+
                 var result = AccountService.Instance.Login(Email, Password);
                 if (result.Result == true)
                 {
@@ -145,10 +153,11 @@ namespace Web.Controllers
                     }
                 }
                 return Json(new { result = result.Result, msg = result.Messsage, url = Url });
-            }
-            catch (Exception)
+            } 
+            catch (Exception ex)
             {
-                return Redirect("~/Not_found.html");
+                throw ex;
+                //return Redirect("~/Not_found.html");
             }
         }
         [Route("forgotpassword")]

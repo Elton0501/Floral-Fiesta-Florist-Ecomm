@@ -38,6 +38,9 @@
 </div>
 
 <script>
+    $("#LoginForm").on("submit", function (e) {
+        e.preventDefault();
+    });
     $(".toggle-password").click(function () {
         $(this).toggleClass("bi-eye bi-eye-slash");
         var input = $($(this).attr("toggle"));

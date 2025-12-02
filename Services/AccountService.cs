@@ -59,14 +59,21 @@ namespace Services
 
         public ResultModel Login(string email, string password)
         {
-            var result = new ResultModel();
+            var result = new ResultModel
+            {
+                Result = false,
+                Messsage = "Something went wrong!",
+                Value1 = "",
+                Value2 = "",
+            };
             result.Result = false;
             password = HelperService.Instance.Encrypt(password);
             using (var context = new SVIContext())
             {
-                var adminRole = context.Roles.FirstOrDefault(x => x.RoleName == Constant.Role.Admin);
-                var userRole = context.Roles.FirstOrDefault(x => x.RoleName == Constant.Role.User);
-                var newdata = context.Users.ToList();
+                var roleList = context.Roles.ToList();
+                var adminRole = roleList.FirstOrDefault(x => x.RoleName == Constant.Role.Admin);
+                var userRole = roleList.FirstOrDefault(x => x.RoleName == Constant.Role.User);
+                //var newdata = context.Users.ToList();
                 var data = context.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower()
                 && x.Password == password
                 );
@@ -81,14 +88,15 @@ namespace Services
                 else
                 {
                     result.Result = true;
-                    result.Value1 = data.Name.ToString();
+                    //result.Value1 = data.Name.ToString();
+                    result.Value1 ="jeet";
                 }
 
-                if(data != null && data.RoleId == adminRole.RoleId)
+                if(data != null && adminRole != null && data.RoleId == adminRole.RoleId)
                 {
                     result.Value2 = "Admin";
                 }
-                else if (data != null && data.RoleId == userRole.RoleId)
+                else if (data != null && userRole != null && data.RoleId == userRole.RoleId)
                 {
                     result.Value2 = "User";
                 }
