@@ -19,6 +19,7 @@ namespace Web.Controllers
 {
     public class CheckoutController : Controller
     {
+        HelperController helperController = new HelperController();
         // GET: Checkout
         public ActionResult Address() 
         {
@@ -204,6 +205,16 @@ namespace Web.Controllers
                     result = OrdersService.Instance.SaveOrder(Address);
                     if (result != "false" && result != string.Empty)
                     {
+                        //Send mail to Owner.
+                        string message = "<p>Hi Admin,</p>" +
+                                         "<p>A new order has been received. The Order ID is <b>" + result + "</b>.</p>" +
+                                         "<p>Please check the system for more details.</p>" +
+                                         "<br/>Team Floral Fiesta";
+
+                        string subject = "New Order Received";
+                        string head = "New Order Available";
+                        helperController.templateEmail(ConfigurationManager.AppSettings["email"].ToString(), subject, head, message);
+
                         var notification = new Notification();
                         notification.CreatedOn = DateTime.Now;
                         notification.isMultipleUser = false;
