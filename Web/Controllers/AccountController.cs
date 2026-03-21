@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
+using System.Web.Helpers;
 using System.Web.Hosting;
 using System.Web.Mvc;
 
@@ -154,9 +155,9 @@ namespace Web.Controllers
                 }
                 return Json(new { result = result.Result, msg = result.Messsage, url = Url });
             } 
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
                 //return Redirect("~/Not_found.html");
             }
         }

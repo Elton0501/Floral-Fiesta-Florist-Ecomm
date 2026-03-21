@@ -59,6 +59,8 @@ namespace Services
 
         public ResultModel Login(string email, string password)
         {
+
+
             var result = new ResultModel
             {
                 Result = false,
@@ -88,8 +90,7 @@ namespace Services
                 else
                 {
                     result.Result = true;
-                    //result.Value1 = data.Name.ToString();
-                    result.Value1 ="jeet";
+                    result.Value1 = data.Name.ToString();
                 }
 
                 if(data != null && adminRole != null && data.RoleId == adminRole.RoleId)

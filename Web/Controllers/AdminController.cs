@@ -24,7 +24,7 @@ using SV.Database;
 
 namespace Web.Controllers
 {
-    //[AdminAuthorizationFilterAttribute]
+    [AdminAuthorizationFilterAttribute]
     public class AdminController : Controller
     {
         private string cs;
@@ -47,7 +47,7 @@ namespace Web.Controllers
                 var OrderItems = OrdersService.Instance.GetAllOrderItems();
                 model.TodayOrdersCount = orders.Where(x => x.CreatedOn.Date == today.Date).ToList().Count();
                 model.TodayEarning = orders.Where(x => x.CreatedOn.Date == today.Date).Select(x => x.TotalAmount).Sum();
-                model.MonthlyOrdersCount = orders.Where(x => x.CreatedOn.Month == today.Month).ToList().Count();
+                model.MonthlyOrdersCount = orders.Where(x => x .CreatedOn.Month == today.Month).ToList().Count();
                 model.MonthlyEarning = orders.Where(x => x.CreatedOn.Month == today.Month).Select(x => x.TotalAmount).Sum();
                 model.YearlyOrdersCount = orders.Where(x => x.CreatedOn.Year == today.Year).ToList().Count();
                 model.YearlyEarning = orders.Where(x => x.CreatedOn.Year == today.Year).Select(x => x.TotalAmount).Sum();

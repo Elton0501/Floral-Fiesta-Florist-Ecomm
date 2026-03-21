@@ -298,7 +298,15 @@ namespace Services
         {
             using(var context = new SVIContext())
             {
-                return context.OrderItems.Where(x => x.OrderId == orderID).ToList();
+                var items = context.OrderItems.Where(x => x.OrderId == orderID).ToList();
+                foreach (var item in items)
+                {
+                    int id = item.ItemId;
+                    var productImage = context.ProductImages.Where(x => x.ProductId == id).ToList();
+                    item.DefaultImage = productImage != null && productImage.Count() > 0 ? productImage.FirstOrDefault(x=>x.Default == true) != null 
+                        ? productImage.FirstOrDefault(x => x.Default == true).Image : productImage.FirstOrDefault().Image : "";
+                }
+                return items;
             }
         }
 

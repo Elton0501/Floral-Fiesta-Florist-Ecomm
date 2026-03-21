@@ -191,9 +191,12 @@
                                     Item Id
                                 </th>
                                 <th>
+                                    Item Image
+                                </th>
+                                <th>
                                     Item Name
                                 </th>
-								<th>
+                                <th>
                                     User Note
                                 </th>
                                 <th>
@@ -219,9 +222,12 @@
                             @Html.DisplayFor(modelItem => item.ItemId)
                         </td>
                         <td>
+                            <a href="@item.DefaultImage" style="cursor:pointer;" target="_blank"><img src="@item.DefaultImage" alt="Alternate Text" style="width:100px;" /></a>
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
-						 <td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.IDesc)
                         </td>
                         <td>

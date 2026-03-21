@@ -29,7 +29,7 @@ namespace Web.Controllers
 
             if (string.IsNullOrEmpty(token))
             {
-                filterContext.Result = new RedirectResult("/");
+                filterContext.Result = new RedirectResult("/login");
                 return;
             }
 
