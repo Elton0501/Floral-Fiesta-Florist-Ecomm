@@ -174,7 +174,7 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="bi bi-arrow-up"></i>
     </a>
-
+    <audio id="notifSound" src="~/Content/Sound/mixkit-happy-bells-notification-937.wav" preload="auto"></audio>
 
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/jquery.easing.min.js"></script>
@@ -184,25 +184,76 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="~/Scripts/sweetalert2.all.min.js"></script>
-	
-	
-	 <script>
-        function NotificationMessage() {
-                Notification.requestPermission().then(perm => {
-                    if (perm === "granted") {
-                        const notification = new Notification("Order Notification", {
-                            body: "New order placed",
-                            tag :"Click here to view your order"
-                        })
-                        notification.addEventListener("click", e => {
-                            var url = "/Admin/PendingOrdersList";
-                            window.location.href = url;
-                        })
-                    }
-                })
+    <script>
+        let pulseTimer;
+        let isAudioUnlocked = false;
+
+        function unlockAudio() {
+            const audio = document.getElementById("notifSound");
+            if (!audio) return;
+
+            audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                isAudioUnlocked = true;
+                console.log("Audio unlocked");
+            }).catch(() => { });
+        }
+
+        // Trigger once on ANY interaction
+        document.addEventListener("click", unlockAudio, { once: true });
+        document.addEventListener("keydown", unlockAudio, { once: true });
+        // Play sound
+        function playNotificationSound() {
+            if (!isAudioUnlocked) {
+                console.log("Audio not unlocked yet");
+                return;
             }
+
+            const audio = document.getElementById("notifSound");
+            if (!audio) return;
+
+            audio.currentTime = 0;
+            audio.play().catch(err => console.log(err));
+        }
+
+        function NotificationMessage() {
+            triggerOrderAlert();
+            //Add sound
+            playNotificationSound(); // 🔊 will work AFTER first interaction
+
+            Notification.requestPermission().then(perm => {
+                if (perm === "granted") {
+                    const notification = new Notification("Order Notification", {
+                        body: "New order placed",
+                        tag: "Click here to view your order"
+                    })
+                    notification.addEventListener("click", e => {
+                        var url = "/Admin/PendingOrdersList";
+                        window.location.href = url;
+                    })
+                }
+            })
+        }
+
+        function triggerOrderAlert() {
+            const btn = document.getElementById("notifyBtn");
+            if (!btn) return;
+
+            btn.classList.add("pulse-btn");
+
+            if (pulseTimer) clearTimeout(pulseTimer);
+
+            pulseTimer = setTimeout(() => {
+                btn.classList.remove("pulse-btn");
+            }, 30000);
+        }
+
+            document.getElementById("notifyBtn").addEventListener("click", function () {
+                this.classList.remove("pulse-btn");
+            });
     </script>
-	
+
 </body>
 
 </html>

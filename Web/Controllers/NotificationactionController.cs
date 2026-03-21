@@ -20,7 +20,7 @@ namespace Web.Controllers
                 DateTime Current = DateTime.Now;
                 using (var context = new SVIContext())
                 {
-                    result = context.Notification.ToList();
+                    result = context.Notification.OrderByDescending(x=> x.CreatedOn).ToList();
                     result = result.Select(x =>
                     {
                         x.TimeTrek = Current.Day > x.CreatedOn.Day ? Current.Day - x.CreatedOn.Day + " day ago" :

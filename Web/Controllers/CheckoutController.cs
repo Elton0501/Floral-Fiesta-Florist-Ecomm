@@ -206,14 +206,21 @@ namespace Web.Controllers
                     if (result != "false" && result != string.Empty)
                     {
                         //Send mail to Owner.
+                        //string message = "<p>Hi Admin,</p>" +
+                        //                 "<p>A new order has been received. The Order ID is <b>" + result + "</b>.</p>" +
+                        //                 "<p>Please check the link for more details.<b>" + link + "</b>.</p>" +
+                        //                 "<br/>Team Floral Fiesta";
+                        // Send mail to Owner.
                         string message = "<p>Hi Admin,</p>" +
                                          "<p>A new order has been received. The Order ID is <b>" + result + "</b>.</p>" +
-                                         "<p>Please check the system for more details.</p>" +
+                                         "<p>Please check the link for more details. " +
+                                         "<a href=\"https://floralfiesta.in/Admin/PendingOrdersList\">" +
+                                         "https://floralfiesta.in/Admin/PendingOrdersList</a>.</p>" +
                                          "<br/>Team Floral Fiesta";
 
                         string subject = "New Order Received";
                         string head = "New Order Available";
-                        helperController.templateEmail(ConfigurationManager.AppSettings["email"].ToString(), subject, head, message);
+                        helperController.templateEmail(ConfigurationManager.AppSettings["company_gmail"].ToString(), subject, head, message);
 
                         var notification = new Notification();
                         notification.CreatedOn = DateTime.Now;
