@@ -22,7 +22,11 @@
                             <a href="/forgotpassword" style="color: var(--primary)">Forgot Password</a>
                         </div>
                         <div class="form-group d-flex justify-content-center">
-                            <button style="border-radius:0;" type="button" id="UserLogin" class="form-control btn btn-primary submit px-3 w-50 log-btn">Sign In</button>
+                            <button style="border-radius:0;" type="button" id="UserLogin" class="form-control btn btn-primary submit px-3 w-50 log-btn">
+                                <span id="btnText">Sign In</span>
+                                <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                            </button>
+
                         </div>
                         <div class="form-group">
                             <div class="text-center">
@@ -38,9 +42,9 @@
 </div>
 
 <script>
-    $("#LoginForm").on("submit", function (e) {
-        e.preventDefault();
-    });
+    //$("#LoginForm").on("submit", function (e) {
+    //    e.preventDefault();
+    //});
     $(".toggle-password").click(function () {
         $(this).toggleClass("bi-eye bi-eye-slash");
         var input = $($(this).attr("toggle"));
@@ -50,7 +54,7 @@
             input.attr("type", "password");
         }
     });
-        $("#LoginForm").validate({
+    $("#LoginForm").validate({
         rules: {
             Email: {
                 required: true,
@@ -70,42 +74,60 @@
             },
         }
     });
+
     $("#UserLogin").click(function () {
+        if (!$("#LoginForm").valid()) {
+            return;
+        }
+        // Disable + show spinner
         $("#UserLogin").prop('disabled', true);
-        if ($("#LoginForm").valid()) {
-            var Password = $("#password-field").val();
-            var EmailId = $("#Email").val();
-            $.ajax({
-                type: 'POST',
-                url: '/Account/Login',
-                data: {
-                    Password: Password,
-                    Email: EmailId,
-                    Url: '@Pageurl'
-                },
-                success: function (response) {
-                    if (response.result == true) {
-                        if (response.url != null && response.url != "") {
-                            window.location.href = response.url;
-                            $("#UserLogin").prop('disabled', false);
-                        }
-                        else {
-                            var url = "/";
-                            window.location.href = url;
-                            $("#UserLogin").prop('disabled', false);
-                        }
+        $("#btnText").text("Signing in...");
+        $("#btnSpinner").removeClass("d-none");
+
+        var Password = $("#password-field").val();
+        var EmailId = $("#Email").val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/Account/Login',
+            data: {
+                Password: Password,
+                Email: EmailId,
+                Url: '@Pageurl'
+            },
+            success: function (response) {
+                if (response.result == true) {
+                    if (response.url != null && response.url != "") {
+                        window.location.href = response.url;
+                        // Re-enable + hide spinner
+                        $("#UserLogin").prop('disabled', false);
+                        $("#btnText").text("Sign In");
+                        $("#btnSpinner").addClass("d-none");
                     }
                     else {
-                        $("#regMsg").html(response.msg);
+                        var url = "/";
+                        window.location.href = url;
+                        // Re-enable + hide spinner
                         $("#UserLogin").prop('disabled', false);
+                        $("#btnText").text("Sign In");
+                        $("#btnSpinner").addClass("d-none");
                     }
-                },
-                error: function (response) {
-                    alert("Something went wrong");
-                    $("#UserLogin").prop('disabled', false);
                 }
-            });
-        }
-        $("#UserLogin").prop('disabled', false);
+                else {
+                    $("#regMsg").html(response.msg);
+                    // Re-enable + hide spinner
+                    $("#UserLogin").prop('disabled', false);
+                    $("#btnText").text("Sign In");
+                    $("#btnSpinner").addClass("d-none");
+                }
+            },
+            error: function (response) {
+                alert("Something went wrong");
+                // Re-enable + hide spinner
+                $("#UserLogin").prop('disabled', false);
+                $("#btnText").text("Sign In");
+                $("#btnSpinner").addClass("d-none");
+            }
+        });
     });
 </script>

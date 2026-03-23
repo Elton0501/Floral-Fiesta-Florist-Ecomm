@@ -1074,6 +1074,9 @@ namespace Web.Controllers
             using (var context = new SVIContext())
             {
                 var products = context.Products.Include(x=>x.SubCategory).OrderBy(x => x.SubCategory.Name).ToList();
+                var categories = context.Categories.ToDictionary(x => x.Id, x => x.Name);
+
+                ViewBag.CategoryMap = categories;
                 return View(products);
             }           
         }

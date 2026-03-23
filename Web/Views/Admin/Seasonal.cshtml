@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     int Count = 0;
     var imgdata = Services.KeyService.Instance.SeasonImg("SeasonImg");
+    var categoryMap = ViewBag.CategoryMap as Dictionary<int, string>;
 }
 
 <style>
@@ -137,8 +138,8 @@
                             <tr>
                                 <td>@Count</td>
                                 <td>@item.Name</td>
-								<td><img src="@item.imgdefault" style="width:50%" /></td>
-                                <td>@CategoryService.Instance.CategoryName(item.CategoryId)</td>
+								<td><img src="@item.imgdefault" loading="lazy" style="width:50%" /></td>
+                                <td>@(categoryMap.ContainsKey(item.CategoryId) ? categoryMap[item.CategoryId] : "")</td>
                                 <td>
                                     <label class="switch">
                                         @{
@@ -154,8 +155,8 @@
                                         @{
                                             var trueFeaturedStatus = item.Isfeatured == true ? "Checked" : string.Empty;
                                         }
-                                        <input type="hidden" name="FeaStatus" value='@item.Isfeatured' id="chkfeastatus" title="Status" />
-                                        <input type="checkbox" class="featured-cb" data-id="@item.Id" id="chkfeastatus" @trueFeaturedStatus>
+                                        <input type="hidden" name="FeaStatus" value='@item.Isfeatured' id="chkfeastatus_@item.Id" title="Status" />
+                                        <input type="checkbox" class="featured-cb" data-id="@item.Id" id="chkfeastatus_@item.Id" @trueFeaturedStatus>
                                         <span class="slider round" id=""></span>
                                     </label>
                                 </td>
